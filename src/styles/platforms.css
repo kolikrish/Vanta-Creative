@@ -1,0 +1,579 @@
+/* Platforms We Worked With
+   Two large cards showing the real platform logos, our verified role and a
+   click-to-open modal with growth analytics for each platform. */
+
+.pww {
+  position: relative;
+  padding: clamp(5rem, 9vw, 9rem) clamp(1.25rem, 4vw, 4rem);
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+}
+
+.pww-inner {
+  position: relative;
+  max-width: 1320px;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+.pww-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
+  max-width: 60ch;
+  margin: 0 auto clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.pww-eyebrow {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.78rem;
+  letter-spacing: 0.19em;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.pww-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5.4vw, 5.4rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.pww-title-em {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.pww-sub {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.05vw, 1.1rem);
+  line-height: 1.55;
+  color: var(--text-dim);
+  margin: 0;
+  max-width: 56ch;
+}
+
+/* === Cards grid === */
+
+.pww-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.4vw, 2.4rem);
+}
+
+.pww-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  /* Tight gap — content stacks close to the badge so the card
+     reads as a single compact unit instead of a huge empty box. */
+  gap: clamp(0.85rem, 1.4vw, 1.25rem);
+  padding: clamp(1.25rem, 2vw, 1.75rem) clamp(1.25rem, 2.2vw, 2rem);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  width: 100%;
+  /* Was clamp(380, 40vw, 540) — huge box with the content hugging
+     the bottom. Shrunk so the card auto-sizes to its content. */
+  min-height: auto;
+  appearance: none;
+  transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+              border-color 0.3s ease,
+              background 0.3s ease;
+  will-change: transform;
+}
+
+.pww-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--pww-accent, var(--accent)) 0%, transparent 55%);
+  opacity: 0.06;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.pww-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--pww-accent, var(--accent));
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pww-card:hover::before { opacity: 0.18; }
+
+.pww-card:focus-visible {
+  outline: 2px solid var(--pww-accent, var(--accent));
+  outline-offset: 4px;
+}
+
+.pww-card-mark {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Card-mark container size — back to compact (the badge image
+     inside scales beyond this container via the rule below, so the
+     visual logo is large without making the card bigger). */
+  width: 100%;
+  max-width: 220px;
+  height: clamp(120px, 14vw, 160px);
+  padding: 0;
+  background: transparent;
+  border-radius: 14px;
+  /* Allow the scaled image to spill out so the LOGO can be big
+     while the container stays compact. */
+  overflow: visible;
+}
+
+.pww-card-mark img {
+  display: block;
+  /* Visual logo is now 1.6× the container size — so it reads as a
+     hero element while the card's layout box stays compact (no
+     extra empty space inside the card). object-fit: contain inside
+     the bigger box keeps the badge's aspect ratio. The container's
+     overflow:visible above lets the scaled-up image extend past the
+     box visually. */
+  width: 160%;
+  height: 160%;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.pww-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  width: 100%;
+  /* Body absorbs any extra height so the foot sits flush at the
+     bottom of EVERY card, not just the one with the longer blurb. */
+  flex: 1 1 auto;
+}
+
+.pww-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.85rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.11em;
+  color: var(--text-dim);
+}
+
+.pww-card-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pww-accent, var(--accent));
+  box-shadow: 0 0 12px var(--pww-accent, var(--accent));
+}
+
+.pww-card-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.65rem, 2.4vw, 2.4rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: 0em;
+  color: var(--text);
+  margin: 0;
+}
+
+.pww-card-blurb {
+  font-family: var(--font-body);
+  font-size: clamp(0.92rem, 1vw, 1.02rem);
+  line-height: 1.55;
+  color: var(--text-dim);
+  margin: 0;
+  max-width: 44ch;
+}
+
+.pww-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding-top: clamp(1rem, 1.6vw, 1.5rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.11em;
+  color: var(--text-mute);
+  /* Pushed to the absolute bottom of the card so VIEW GROWTH ANALYTICS
+     lines up at the same Y on both cards regardless of blurb length. */
+  margin-top: auto;
+}
+
+.pww-card-arrow {
+  font-size: 1.1rem;
+  color: var(--pww-accent, var(--accent));
+  transition: transform 0.3s ease;
+}
+
+.pww-card:hover .pww-card-arrow {
+  transform: translate(3px, -3px);
+}
+
+/* === Modal === */
+
+.pww-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(5, 5, 6, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 3rem);
+  animation: pww-overlay-in 0.35s ease-out;
+}
+
+@keyframes pww-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.pww-modal {
+  position: relative;
+  width: min(900px, 100%);
+  /* Was max-height: 85svh — on landscape phones (e.g., 568×320) this
+     became 272px tall, smaller than the partner badge + headline.
+     The modal would crush into an unreadable strip. Min-height floor
+     keeps the modal usable at any device orientation; the panel still
+     scrolls internally if content exceeds the viewport. */
+  max-height: 85vh;
+  max-height: 85svh;
+  min-height: min(380px, 100%);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: clamp(1.75rem, 3.2vw, 3rem);
+  /* Flat dark panel — the previous yellow-accent inset shadow + diagonal
+     gradient + accent top stripe made every Meta modal look yellow and
+     every Amazon modal look orange. Now: one neutral dark surface so
+     the verified-partner badge is the only branded thing on the panel. */
+  background: #0c0c0e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  color: var(--text);
+}
+
+.pww-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+  padding: 0;
+}
+
+.pww-modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(90deg);
+}
+
+.pww-modal-close span {
+  position: absolute;
+  width: 16px;
+  height: 1.5px;
+  background: var(--text);
+  border-radius: 2px;
+}
+
+.pww-modal-close span:first-child  { transform: rotate(45deg); }
+.pww-modal-close span:last-child   { transform: rotate(-45deg); }
+
+.pww-modal-head {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.pww-modal-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Container size — back to compact original so the modal panel
+     itself doesn't take more space. The badge image inside scales
+     beyond this container via the img rule below, so the LOGO
+     reads visually larger while the container stays modest. */
+  width: clamp(140px, 18vw, 200px);
+  height: clamp(60px, 7vw, 80px);
+  padding: 0;
+  background: transparent;
+  border-radius: 12px;
+  /* Allow the scaled-up image to spill out of the container box. */
+  overflow: visible;
+}
+
+.pww-modal-logo img {
+  /* Image layout box is 160% of the container — same trick used on
+     the home card-mark. object-fit:contain keeps the badge's
+     aspect ratio inside that bigger box, and the container's
+     overflow:visible lets it extend past the container bounds. */
+  width: 160%;
+  height: 160%;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.pww-modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.85rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.11em;
+  color: var(--text-dim);
+}
+
+.pww-modal-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pww-accent);
+  box-shadow: 0 0 12px var(--pww-accent);
+}
+
+.pww-modal-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 3.4vw, 2.8rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: 0em;
+  margin: 0 0 0.85rem;
+  color: var(--text);
+}
+
+.pww-modal-lead {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.1vw, 1.08rem);
+  line-height: 1.6;
+  color: var(--text-dim);
+  margin: 0 0 2rem;
+  max-width: 64ch;
+}
+
+/* Stats grid */
+
+.pww-modal-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.pww-modal-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+}
+
+.pww-modal-stat-v {
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 2.6vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1;
+  color: var(--pww-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.pww-modal-stat-k {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.09em;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.pww-modal-stat-n {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text-mute);
+}
+
+/* Growth curve */
+
+.pww-modal-graph {
+  margin-bottom: 1.75rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+}
+
+.pww-modal-graph-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 0.85rem;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.11em;
+  color: var(--text-dim);
+}
+
+.pww-modal-curve {
+  display: block;
+  width: 100%;
+  height: clamp(110px, 14vw, 160px);
+  overflow: visible;
+}
+
+/* Capabilities */
+
+.pww-modal-caps {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1.25rem;
+}
+
+.pww-modal-caps-label {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.11em;
+  color: var(--text-dim);
+}
+
+.pww-modal-caps ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pww-modal-caps li {
+  padding: 0.4rem 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--text);
+}
+
+/* === Mobile === */
+
+@media (max-width: 900px) {
+  .pww { padding: 4rem 1.25rem; }
+  .pww-head { gap: 0.85rem; margin-bottom: 2.25rem; }
+  .pww-eyebrow { font-size: 0.7rem; }
+  .pww-title { font-size: clamp(2rem, 8vw, 3rem); }
+  .pww-sub { font-size: 1.15rem; }
+
+  /* Both cards side-by-side on mobile (single horizontal row) instead
+     of stacking vertically. Cards get tighter padding so two narrow
+     cards fit comfortably. */
+  .pww-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+  }
+
+  .pww-card {
+    padding: 1rem 0.85rem;
+    gap: 0.6rem;
+    /* Auto-height — card sizes to its content instead of holding a
+       fixed-height empty box. */
+    min-height: auto;
+    justify-content: flex-start;
+  }
+  /* Container stays compact; the badge image is scaled up via the
+     base `.pww-card-mark img` rule (width/height: 160%) and the
+     container's overflow:visible lets it spill past the box. */
+  .pww-card-mark { width: 100%; max-width: 180px; height: clamp(96px, 22vw, 140px); padding: 0; border-radius: 12px; }
+  .pww-card-body { gap: 0.5rem; }
+  .pww-card-name { font-size: 1.15rem; }
+  .pww-card-blurb { font-size: 0.62rem; line-height: 1.35; }
+  .pww-card-badge { font-size: 0.42rem; padding: 0.2rem 0.45rem; gap: 0.3rem; letter-spacing: 0.08em; }
+  .pww-card-foot { font-size: 0.42rem; gap: 0.3rem; padding-top: 0.5rem; letter-spacing: 0.08em; margin-top: auto; }
+
+  .pww-modal-overlay { padding: 0.75rem; }
+  .pww-modal {
+    padding: 1.25rem 1rem;
+    max-height: 88vh;
+    max-height: 88svh;
+  }
+  .pww-modal-head { gap: 0.85rem; margin-bottom: 1.1rem; }
+  /* Container stays compact on mobile; the badge image inside is
+     still scaled by the base `.pww-modal-logo img { width: 160% }`
+     rule so the logo reads bigger without bloating the modal. */
+  .pww-modal-logo { width: 100px; height: 44px; padding: 0; }
+  .pww-modal-title { font-size: 1.55rem; }
+  .pww-modal-lead { font-size: 1.15rem; margin-bottom: 1.4rem; }
+
+  .pww-modal-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+    margin-bottom: 1.4rem;
+  }
+  .pww-modal-stat { padding: 0.85rem 0.9rem; }
+  .pww-modal-stat-v { font-size: 1.6rem; }
+  .pww-modal-stat-k { font-size: 0.7rem; }
+  .pww-modal-stat-n { font-size: 0.7rem; }
+
+  .pww-modal-graph { padding: 0.9rem; margin-bottom: 1.25rem; }
+  .pww-modal-caps li { font-size: 0.76rem; padding: 0.3rem 0.7rem; }
+}
+
+@media (max-width: 480px) {
+  .pww { padding: 3rem 0.75rem; }
+  /* Keep cards side-by-side on the smallest screens too. Tighter still. */
+  .pww-grid { gap: 0.5rem; }
+  .pww-card { padding: 0.85rem 0.65rem; gap: 0.55rem; min-height: auto; }
+  .pww-card-mark { width: 100%; max-width: 150px; height: clamp(82px, 26vw, 120px); padding: 0; }
+  .pww-card-name { font-size: 0.78rem; }
+  .pww-card-blurb { font-size: 0.58rem; line-height: 1.35; }
+  .pww-card-badge { font-size: 0.4rem; padding: 0.22rem 0.4rem; letter-spacing: 0.07em; }
+  .pww-card-foot { font-size: 0.4rem; letter-spacing: 0.07em; padding-top: 0.5rem; }
+
+  .pww-modal-stats { grid-template-columns: 1fr; }
+  .pww-modal-close { top: 0.75rem; right: 0.75rem; width: 32px; height: 32px; }
+}

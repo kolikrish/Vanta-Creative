@@ -1,0 +1,745 @@
+/* "Brands we've worked with" — Apple-Watch-style honeycomb of circular
+   logos. The section scrolls naturally (no pin), and each orb's scale is
+   driven from JS based on its distance from the viewport centre, giving
+   the watchOS fish-eye lens effect. Hover smoothly enlarges any single orb. */
+
+/* ----------------------------------------------------------------------
+   Home-page client strip — a clean row of marquee brand logos, NOT the
+   full honeycomb (that lives on /brands). Each cell is a square tile
+   with the logo centred on a subtle dark glass background, so the row
+   reads as a curated "trusted by" block.
+   ---------------------------------------------------------------------- */
+.clients-strip {
+  position: relative;
+  width: 100%;
+  min-height: auto;
+  padding: clamp(4.5rem, 10vh, 8rem) clamp(1.25rem, 5vw, 4rem);
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.clients-strip-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vh, 3rem);
+  align-items: flex-start;
+}
+
+.clients-strip-head {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 60ch;
+}
+
+.clients-strip-eyebrow {
+  color: var(--text-dim);
+  letter-spacing: 0.21em;
+  font-size: 0.85rem;
+}
+
+.clients-strip-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 4.4rem);
+  font-weight: 500;
+  letter-spacing: 0em;
+  line-height: 1.02;
+  color: var(--text);
+  margin: 0;
+  max-width: 22ch;
+}
+
+.clients-strip-title span {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 400;
+  font-size: inherit;
+  letter-spacing: inherit;
+}
+
+.clients-strip-sub {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+  line-height: 1.55;
+  color: var(--text-dim);
+  letter-spacing: 0.07em;
+  text-transform: none;
+}
+
+.clients-strip-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.75rem, 1.4vw, 1.25rem);
+}
+
+.clients-strip-cell {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.85rem, 1.6vw, 1.4rem);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition:
+    border-color 0.35s ease,
+    background 0.35s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.clients-strip-cell:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-3px);
+}
+
+.clients-strip-cell img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 72%;
+  max-height: 70%;
+  object-fit: contain;
+  /* Reset global img filter so brand logos render in their native
+     palette — the global desaturate is meant for photography. */
+  filter: saturate(1.05);
+  transition: filter 0.35s ease, opacity 0.35s ease;
+}
+
+/* Park Avenue (JPG, white background) — screen-blend so the white
+   plate drops out and the wordmark sits flush with neighbouring
+   transparent PNGs. */
+.clients-strip-cell--bg-white img {
+  mix-blend-mode: screen;
+  filter: saturate(1.05) contrast(1.1) brightness(1.05);
+}
+
+.clients-strip-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+  padding: 0.9rem 1.4rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  letter-spacing: 0.09em;
+  color: var(--text);
+  background: transparent;
+  text-decoration: none;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.clients-strip-cta:hover {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.clients-strip-cta span {
+  transition: transform 0.3s ease;
+  color: inherit;
+  letter-spacing: 0.07em;
+}
+
+.clients-strip-cta:hover span { transform: translate(3px, -3px); }
+
+@media (max-width: 900px) {
+  .clients-strip { padding: 3.5rem 1rem; }
+  .clients-strip-title { font-size: clamp(1.9rem, 8vw, 2.8rem); }
+  .clients-strip-grid { grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+}
+
+@media (max-width: 520px) {
+  .clients-strip-grid { grid-template-columns: repeat(2, 1fr); }
+  .clients-strip-cell { aspect-ratio: 5 / 4; border-radius: 12px; }
+  .clients-strip-cta { padding: 0.75rem 1.1rem; font-size: 1.1rem; }
+}
+
+/* ----------------------------------------------------------------------
+   ClientsGrid — full /brands page roster. Same tile language as the
+   home-page strip, just with every brand instead of the curated 8.
+   Each tile shows the logo + brand name so the page reads as a
+   directory of who we've shipped with, not just a wall of marks.
+   Static layout (no sticky stage, no rAF orb scaling) so navigating
+   to /brands always paints on first frame regardless of the route
+   the user came from.
+   ---------------------------------------------------------------------- */
+.clients-grid-section {
+  position: relative;
+  width: 100%;
+  min-height: auto;
+  padding: clamp(4rem, 9vh, 6.5rem) clamp(1.25rem, 5vw, 4rem);
+  background: var(--bg);
+}
+
+.clients-grid-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 5vh, 3.5rem);
+}
+
+.clients-grid-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-width: 60ch;
+}
+
+.clients-grid-eyebrow {
+  color: var(--text-dim);
+  letter-spacing: 0.21em;
+  font-size: 0.85rem;
+}
+
+.clients-grid-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 500;
+  letter-spacing: 0em;
+  line-height: 1.02;
+  color: var(--text);
+  margin: 0;
+  max-width: 22ch;
+  text-transform: none;
+}
+
+.clients-grid-title span {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 400;
+  font-size: inherit;
+  letter-spacing: inherit;
+}
+
+.clients-grid-sub {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+  line-height: 1.55;
+  color: var(--text-dim);
+  letter-spacing: 0.07em;
+  text-transform: none;
+}
+
+.clients-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(0.75rem, 1.4vw, 1.25rem);
+}
+
+.clients-grid-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  aspect-ratio: 1 / 1;
+  padding: clamp(0.85rem, 1.6vw, 1.4rem);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition:
+    border-color 0.35s ease,
+    background 0.35s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.clients-grid-cell:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-3px);
+}
+
+.clients-grid-cell img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 64%;
+  max-height: 55%;
+  object-fit: contain;
+  filter: saturate(1.05);
+  transition: filter 0.35s ease, opacity 0.35s ease;
+}
+
+.clients-grid-cell--bg-white img {
+  mix-blend-mode: screen;
+  filter: saturate(1.05) contrast(1.1) brightness(1.05);
+}
+
+.clients-grid-name {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.3;
+  /* Stays inside the tile even when brand names are long (Indore
+     Management Association, Park Avenue Beer Shampoo, etc.). */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+  .clients-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .clients-grid-section { padding: 3.5rem 1rem; }
+  .clients-grid-title { font-size: clamp(1.8rem, 8vw, 2.6rem); }
+  .clients-grid { grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
+  .clients-grid-cell { gap: 0.5rem; }
+  .clients-grid-name { font-size: 0.62rem; letter-spacing: 0.07em; }
+}
+
+@media (max-width: 520px) {
+  .clients-grid { grid-template-columns: repeat(2, 1fr); }
+  .clients-grid-cell { aspect-ratio: 5 / 4; border-radius: 12px; }
+}
+
+/* Inline CTA inside the brands-head row — replaces the right-hand
+   "Circle ↻ 2018–2026" caption on the home honeycomb so the "see all
+   brands" link sits up at the top of the section instead of in its
+   own block below. */
+.brands-head-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.05rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.17em;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.03);
+  text-decoration: none;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+  /* Sit on the brand-head z-layer so it stays above the sticky stage
+     gradients and is clickable. */
+  position: relative;
+  z-index: 6;
+  pointer-events: auto;
+}
+
+.brands-head-cta:hover {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.brands-head-cta span {
+  transition: transform 0.3s ease;
+  color: inherit;
+  letter-spacing: 0.07em;
+}
+
+.brands-head-cta:hover span { transform: translate(3px, -3px); }
+
+@media (max-width: 600px) {
+  .brands-head-cta { padding: 0.5rem 0.9rem; font-size: 0.7rem; letter-spacing: 0.13em; }
+}
+
+
+/* The outer section is just tall enough to give the sticky stage a
+   modest scroll runway. The first viewport's worth IS the stage; the
+   extra 0.5vh of height is the runway during which the honeycomb
+   translates internally. Keeping the section tight (1.5vh total)
+   means there's no excess black gap before or after the brands
+   while scrolling past — the section starts where the stage starts
+   and ends roughly where the stage ends. */
+.brands {
+  position: relative;
+  width: 100%;
+  /* Section sized to its content — every row of the honeycomb is
+     visible as the user scrolls past (top rows never disappear off
+     the top of a sticky stage). Per-orb fish-eye scale fires on
+     each orb as it crosses the viewport centre. No empty space
+     below the last row. */
+  min-height: auto;
+  padding: clamp(3.5rem, 8vh, 6.5rem) 0;
+  background: #000;
+  color: #eaeae6;
+  border-top: 1px solid var(--border);
+}
+
+/* Override the sticky-stage base rules below — honeycomb flows
+   as a normal-flow block on all desktop widths. */
+.brands-stage {
+  position: static !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+.brands-head {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+}
+.brands-honeycomb {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+}
+.brands-edge { display: none !important; }
+
+/* Below this point the original sticky-stage rules from the prior
+   layout are still declared; the !important overrides above
+   neutralise them on desktop. Mobile media queries beyond are
+   unchanged. */
+.brands-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+.brands-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(50% 50% at 50% 0%, rgba(96, 165, 250, 0.06), transparent 60%),
+    radial-gradient(40% 40% at 50% 100%, rgba(255, 197, 92, 0.05), transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top + bottom edge masks — black gradient strips at the stage's edges
+   that fade to transparent toward the centre. As the honeycomb translates
+   upward under the rAF loop, logos appear to emerge from the bottom mask,
+   pass through the clear middle of the stage, and dissolve into the top
+   mask — like icons rising up through a watch face. */
+.brands-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: clamp(120px, 18vh, 220px);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.brands-edge-top {
+  top: 0;
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgba(0, 0, 0, 0.92) 30%,
+    rgba(0, 0, 0, 0.6) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.brands-edge-bottom {
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    #000 0%,
+    rgba(0, 0, 0, 0.92) 30%,
+    rgba(0, 0, 0, 0.6) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.brands-head {
+  position: absolute;
+  top: clamp(1.25rem, 2.5vw, 2.25rem);
+  left: clamp(1rem, 3vw, 3rem);
+  right: clamp(1rem, 3vw, 3rem);
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  letter-spacing: 0.07em;
+  z-index: 5;
+}
+
+/* === Honeycomb === */
+
+.brands-honeycomb {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.9rem, 2vw, 1.9rem);
+  margin: 0 auto;
+  max-width: 1400px;
+  padding: clamp(1.5rem, 4vw, 4rem) clamp(1rem, 3vw, 3rem);
+  z-index: 2;
+  /* The JS rAF loop rewrites this transform every frame for the internal
+     scroll. will-change keeps the browser from re-creating the paint
+     layer on every change. */
+  will-change: transform;
+}
+
+.brands-honeycomb-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+/* The 4-orb rows are centred between the 5-orb rows because flex justify-
+   content already does that — no manual margin offset needed when the row
+   counts differ by 1. The visual is the watchOS staggered grid: a 5 above
+   a 4 above a 5, every line dead-centred to the section. */
+
+/* === Brand orb === */
+
+.brand-orb {
+  /* Larger orb than before — combined with the smaller inner
+     padding and the white-halo knockout via mix-blend-mode, the
+     brand mark reads substantially bigger inside its coloured
+     plate now. */
+  --orb-size: clamp(110px, 12vw, 180px);
+  --orb-scale: 0.85;
+  --orb-op: 0.65;
+  --orb-color: var(--c-blue);
+  flex: 0 0 auto;
+  width: var(--orb-size);
+  height: var(--orb-size);
+  border-radius: 50%;
+  cursor: pointer;
+  transform: scale(var(--orb-scale));
+  opacity: var(--orb-op);
+  /* The scroll-driven scale is rewritten every animation frame, so adding
+     a real CSS transition here would fight the rAF loop. The 0.05s curve
+     just smooths the per-frame writes. Hover transition lives on the inner
+     element, where the rAF loop never touches transform. */
+  transition: transform 0.05s linear, opacity 0.18s linear;
+  will-change: transform, opacity;
+}
+
+.brand-orb-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background:
+    radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--orb-color) 28%, transparent), transparent 65%),
+    color-mix(in srgb, var(--orb-color) 12%, #0c0c0e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* Inner padding controls how much of the orb the brand mark
+     fills. Bumped from 4% → 14% to make the logos themselves read
+     a touch smaller inside each orb (more breathing room around
+     the mark, orb circle size unchanged). */
+  padding: 14%;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--orb-color) 35%, transparent),
+    0 8px 22px rgba(0, 0, 0, 0.55);
+  transition:
+    transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.45s ease,
+    background 0.45s ease;
+}
+
+.brand-orb-inner img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  /* `mix-blend-mode: screen` knocks the inner WHITE halo/plate
+     that's baked into many brand-logo PNGs straight through to
+     the coloured orb backdrop behind — pure white pixels become
+     "transparent" against the dark+coloured orb so the brand
+     mark sits flush on the coloured plate. Logos with dark
+     wordmarks still read clearly because screen leaves dark
+     values unchanged. */
+  mix-blend-mode: screen;
+  filter: saturate(1.05) contrast(1.05);
+}
+
+/* Per-brand override hook kept for special cases — currently empty
+   because the global `.brand-orb-inner img { mix-blend-mode: screen }`
+   rule above already knocks out white plates / JPG backgrounds
+   site-wide. */
+.brand-orb--bg-white .brand-orb-inner img {
+  filter: saturate(1.05) contrast(1.1) brightness(1.05);
+}
+
+
+/* `mod: "boost"` — shrinks the orb's inner padding for logos whose
+   supplied artwork is naturally smaller / has tight internal padding
+   (e.g. Agrawal Namkeen). The brand mark fills more of the orb, while
+   every other brand keeps its standard 16% breathing room. */
+.brand-orb--boost .brand-orb-inner {
+  padding: 2%;
+}
+@media (max-width: 900px) {
+  .brand-orb--boost .brand-orb-inner { padding: 3%; }
+}
+
+/* Hover scales the inner only, so the rAF-driven outer scale is untouched.
+   Bumped to 1.32 for a more pronounced watchOS-style focus pop. The colour
+   of the orb saturates and a glowing ring appears in the orb's brand
+   colour. */
+.brand-orb:hover .brand-orb-inner {
+  transform: scale(1.32);
+  background:
+    radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--orb-color) 55%, transparent), transparent 65%),
+    color-mix(in srgb, var(--orb-color) 26%, #0c0c0e);
+  box-shadow:
+    inset 0 0 0 1.5px var(--orb-color),
+    0 0 0 2px color-mix(in srgb, var(--orb-color) 35%, transparent),
+    0 18px 38px color-mix(in srgb, var(--orb-color) 30%, rgba(0, 0, 0, 0.65));
+}
+
+/* === Responsive === */
+
+@media (max-width: 900px) {
+  /* MOBILE: section is just tall enough for its own content
+     (head + honeycomb + EQUAL small padding top and bottom).
+     No sticky stage, no runway, no internal scroll. The orbs scroll
+     up with the page naturally — small finger scroll = small movement.
+     The watchOS lift is preserved via per-orb scale based on
+     viewport-centre distance (Clients.jsx). */
+  .brands {
+    min-height: auto;
+    /* Was 1.5rem top/bottom — the first orb row's TOP edge sat right
+       under the sticky edge-fade gradient AND right against the
+       section bound, which read as the row being clipped. Bumped to
+       3rem top so the honeycomb has clear space above row 1.
+       Bottom padding now 5.5rem — slightly more breathing room than
+       4rem so the last orb row has a comfortable buffer above the
+       next section on mobile. */
+    padding: 3rem 0 5.5rem;
+    /* Belt-and-suspenders: clip horizontal overflow on mobile so the
+       JS fish-eye's per-orb transform:scale can't paint an orb
+       outside the viewport even on a borderline-narrow phone. */
+    overflow-x: hidden;
+  }
+  .brands-stage {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+  /* Edge gradient strips. On mobile they used to be 50-100px tall and
+     overlapped the first/last orb row, darkening the artwork and
+     making it look "cut at the top". Reduced to ~30-55px so the
+     gradient sits ABOVE the first row, not on top of it. */
+  .brands-edge {
+    position: sticky;
+    height: clamp(28px, 5svh, 56px);
+  }
+  .brands-edge-top {
+    top: 0;
+    margin-bottom: calc(-1 * clamp(28px, 5svh, 56px));
+  }
+  .brands-edge-bottom {
+    bottom: 0;
+    margin-top: calc(-1 * clamp(28px, 5svh, 56px));
+  }
+  .brands-head {
+    position: relative;
+    /* Reset the absolute-positioning offsets from the desktop rule
+       so the head sits flush-centred under the section padding,
+       not shifted right by the leftover `left:` clamp. */
+    top: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem 1rem;
+  }
+  .brands-head > p {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+  }
+  .brands-honeycomb {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    transform: none !important;
+    padding: 0.5rem;
+    /* Vertical gap between rows. Mobile uses a 4/3 row pattern; the
+       row gap below was 0.95rem, which still fits — only the orb
+       size + row inner gap caused the horizontal overflow. */
+    gap: 0.7rem;
+    will-change: auto;
+  }
+  /* 4-orb row is the constraint. 4 × 23vw + 3 × 0.35rem gaps + side
+     padding stays comfortably inside 100vw down to ~340px screens. */
+  .brand-orb {
+    --orb-size: clamp(110px, 23vw, 160px);
+    transition: opacity 0.18s linear;
+  }
+  .brands-honeycomb { padding: 0.2rem; }
+  .brands-honeycomb-row { gap: 0.35rem; }
+  /* Mobile: inner padding gives the logo breathing room inside the
+     orb so wordmarks aren't clipped by the circular `border-radius:
+     50% + overflow:hidden`. The orb circle stays the same size —
+     only the logo image inside is constrained. */
+  .brand-orb-inner { padding: 16%; }
+  .brand-orb:hover .brand-orb-inner { transform: scale(1.22); }
+}
+
+@media (max-width: 480px) {
+  .brands { padding: 2.5rem 0 4.5rem; }
+  /* Tighter section + honeycomb side padding so the 4-orb row gets
+     every available pixel. 0.25rem padding × 2 sides + 0.4rem row
+     gap × 3 + orb-size × 4 = comfortably under 100vw at 360-480px. */
+  .brands-honeycomb { gap: 0.45rem; padding: 0.15rem; }
+  .brands-honeycomb-row { gap: 0.3rem; }
+  .brands-edge { height: clamp(22px, 4svh, 44px); }
+  .brands-edge-top { margin-bottom: calc(-1 * clamp(22px, 4svh, 44px)); }
+  .brands-edge-bottom { margin-top: calc(-1 * clamp(22px, 4svh, 44px)); }
+  /* Push the orb up to 22vw on small phones — 4 × 22vw = 88vw still
+     leaves room for the tight gaps + minimal side padding inside
+     100vw. Same 4-orb-row constraint as larger mobile tier. */
+  .brand-orb { --orb-size: clamp(76px, 22vw, 112px); }
+  .brand-orb-inner { padding: 15%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-orb {
+    transition: none;
+  }
+  .brand-orb:hover .brand-orb-inner { transform: scale(1.06); }
+}

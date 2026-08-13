@@ -1,0 +1,197 @@
+.wwd {
+  position: relative;
+  width: 100vw;
+  /* Kept as exact height (not min-height) because the puzzle pin
+     animation depends on viewport-height parity. min-height floor
+     below guarantees enough room for puzzle cards + background type
+     at extreme zoom levels where 100vh shrinks under ~600px. */
+  height: 100vh;
+  height: 100svh;
+  min-height: 600px;
+  overflow: hidden;
+  background: #000;
+  color: #eaeae6;
+}
+
+/* Decorative arrow logo in the bottom-left corner. Full opacity so its
+   original colours render unmuted on the black background. */
+.wwd-arrow {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 2.5rem;
+  width: clamp(110px, 12vw, 200px);
+  height: auto;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 2;
+  user-select: none;
+}
+
+@media (max-width: 900px) {
+  /* Hide the decorative arrow on mobile — it overlaps the spread puzzle
+     and the giant SERVICES type, and adds visual noise on a small screen. */
+  .wwd-arrow { display: none; }
+}
+
+/* OUR / SERVICES — giant blurred letters behind the puzzle. */
+.wwd-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3vh 4vw;
+  pointer-events: none;
+  user-select: none;
+}
+
+.wwd-bg span {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: min(18vw, 26vh);
+  line-height: 0.9;
+  letter-spacing: -0.015em;
+  color: #eaeae6;
+  opacity: 0.32;
+  filter: blur(1px);
+  display: block;
+}
+
+.wwd-bg span:nth-child(1) { align-self: flex-start; }
+.wwd-bg span:nth-child(2) { align-self: flex-end; }
+
+/* Stage hosts the 8 puzzle cards centred in the pinned viewport. */
+.wwd-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Promote to its own layer only during the active scrub phase. Once
+   `.is-locked` is set (post-spread), the layer is dropped so the card
+   layers and stage layer aren't all simultaneously kept on the GPU. */
+.wwd-stage:not(.is-locked) { will-change: transform; }
+
+/* Each card's box uses the inflated puzzle aspect (186 × 126) so the SVG
+   tabs/slots live entirely within its bounds. The card itself has no
+   background — the SVG <path> provides the colour & shape. */
+.wwd-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(500px, 33vw);
+  aspect-ratio: 186 / 126;
+  transform-origin: 50% 50%;
+  /* will-change moved to a class applied only during the active scroll
+     phase (.wwd-stage:not(.is-locked)). Once the puzzle locks into the
+     spread state, layers are dropped to free GPU memory — was the main
+     source of post-spread scroll jitter on low-end devices. */
+}
+
+.wwd-stage:not(.is-locked) .wwd-card { will-change: transform; }
+
+/* Coloured puzzle silhouette. Drop-shadow follows the actual path edges
+   (including tabs), not a rectangular bounding box. Single drop-shadow
+   only — stacking two `filter: drop-shadow()` calls per card (×8 cards)
+   was the dominant paint cost during scroll on this section. */
+.wwd-card-shape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.36));
+  pointer-events: none;
+}
+
+.wwd-card-shape svg,
+svg.wwd-card-shape {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+/* Text sits inside the "core" 160×100 region of the 186×126 viewBox, i.e.
+   inset 13/186 ≈ 6.99% horizontally and 13/126 ≈ 10.32% vertically so it
+   never strays into a tab or slot. */
+.wwd-card-content {
+  position: absolute;
+  top: 10.32%;
+  bottom: 10.32%;
+  left: 6.99%;
+  right: 6.99%;
+  padding: 1.2rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  text-align: center;
+  color: #fff;
+}
+
+.wwd-card-id {
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 1vw, 1.05rem);
+  font-weight: 700;
+  letter-spacing: 0.21em;
+  color: #fff;
+  opacity: 0.85;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.28);
+}
+
+/* Title is white with a soft drop shadow so it stays legible on every
+   card colour. The 13ch cap is wide enough to hold the longest words in
+   the set ("Consultation", "Optimisation", "Development", "Performance"
+   are all 11–12 chars) so we never need to break a word mid-letter, but
+   tight enough that every multi-word title wraps onto 2–3 balanced lines
+   for a uniform vertical rhythm across the eight cards. */
+.wwd-card-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 1.85vw, 2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0em;
+  color: #fff;
+  margin: 0;
+  max-width: 13ch;
+  text-wrap: balance;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.25),
+    0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 1100px) {
+  .wwd-card { width: min(420px, 36vw); }
+  .wwd-card-title { font-size: clamp(1.2rem, 1.95vw, 1.75rem); }
+}
+
+@media (max-width: 900px) {
+  .wwd-card { width: min(50vw, 340px); aspect-ratio: 186 / 200; }
+  .wwd-card-content { padding: 1.1rem 1.25rem; gap: 0.6rem; }
+  .wwd-card-title { font-size: clamp(1.25rem, 3.6vw, 1.7rem); }
+  .wwd-card-id { font-size: clamp(0.85rem, 2.1vw, 1.05rem); }
+  .wwd-bg span { font-size: min(22vw, 22vh); }
+
+  /* Drop the shape-aware drop-shadow on mobile entirely — it's the
+     dominant paint cost during scroll. The tab/slot silhouette is still
+     visible from the SVG path itself. */
+  .wwd-card-shape { filter: none; }
+
+  /* Shrink the giant SERVICES backdrop so both words fit comfortably on a
+     narrow screen. The desktop value (min(18vw, 26vh)) is too large here. */
+  .wwd-bg span { font-size: min(11vw, 14vh); }
+}
+
+@media (max-width: 600px) {
+  .wwd-card { width: min(72vw, 280px); aspect-ratio: 186 / 215; }
+  .wwd-card-content { padding: 0.85rem 1rem; gap: 0.5rem; }
+  .wwd-card-title { font-size: clamp(1.2rem, 5.4vw, 1.55rem); line-height: 1.05; }
+  .wwd-card-id { font-size: clamp(0.85rem, 3vw, 1.05rem); }
+  .wwd-bg span { font-size: min(17vw, 13vh); }
+}

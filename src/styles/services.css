@@ -1,0 +1,558 @@
+/* "Our Work" — left column lists deliverable categories that the user scrolls
+   through (pin / scrub on the section). Right column is a realistic 3D iPhone
+   centred horizontally with two cards drifting on each side. The carousel is
+   100% scroll-driven — JS rewrites each card's transform / opacity / blur as
+   scroll progresses, with the strip gliding smoothly right-to-left. */
+
+.work-scroll {
+  position: relative;
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.work-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  padding: 6rem clamp(1.5rem, 4vw, 5rem) 4rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.work-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: clamp(2rem, 4vh, 4rem);
+}
+
+.work-label p {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  letter-spacing: 0.11em;
+}
+
+.work-grid {
+  flex: 1;
+  display: grid;
+  /* minmax(0, ...) lets the column tracks size by their fr share alone,
+     ignoring intrinsic minimums of children. Without this, a viewport
+     that's physically wider than its track would push the grid out and
+     shove the right column's cards rightward. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 6rem);
+  align-items: center;
+  min-height: 0;
+}
+
+/* === LEFT: scrolling category list + per-category tagline === */
+
+.work-list-col {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vh, 3rem);
+  min-height: 0;
+  /* Forced above the right-column coverflow (z-index:50) so the long
+     titles read in full on top of the card stack instead of being clipped
+     by — or hiding behind — the cards-cyl stacking context. */
+  position: relative;
+  z-index: 50;
+}
+
+.work-list-viewport {
+  position: relative;
+  z-index: 1;
+  height: clamp(320px, 52vh, 540px);
+  /* Physically wider than the grid cell — extends into the right column
+     so the longest titles ("Instagram Stories", "Reels & Short Video")
+     fit in full without needing overflow tricks. The parent
+     .work-list-col has z-index:50, so this overflowing viewport renders
+     on top of the right-column cards. */
+  width: clamp(420px, 52vw, 760px);
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+}
+
+.work-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  will-change: transform;
+}
+
+.work-list-item {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.8vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: 0em;
+  line-height: 1.15;
+  padding: 0.5em 0;
+  color: var(--text);
+  opacity: 0.28;
+  transform: translateY(-50%);
+  transition: color 0.5s ease, opacity 0.5s ease;
+  white-space: nowrap;
+}
+
+.work-list-item.is-active {
+  color: var(--accent);
+  opacity: 1;
+}
+
+.work-tagline {
+  position: relative;
+  min-height: 4rem;
+}
+
+.work-tagline-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  max-width: 32ch;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.35vw, 1.4rem);
+  line-height: 1.4;
+  color: var(--text-dim);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.4s;
+}
+
+.work-tagline-line.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition:
+    opacity 0.4s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0s;
+}
+
+/* === RIGHT: scroll-driven coverflow with realistic iPhone === */
+
+.work-phone-col {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1800px;
+  min-height: 0;
+}
+
+.work-coverflow {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+/* Track holds every orbital card. Cards are absolutely centred — JS
+   rewrites transform per scroll frame to place them on a semi-cylinder
+   around the phone. The track is shifted left to match the phone's own
+   translateX(-50% of phone width), so the orbit is centred on the phone
+   rather than the column's geometric centre. */
+/* Fixed carousel window on the right. The window stays locked in place;
+   the inner .work-cards-track flex row slides on scroll so different
+   cards pass through the centre. Cards are real flex items (guaranteed
+   horizontal layout), with per-card translateZ + scale for depth. */
+.work-cards-cyl {
+  position: relative;
+  z-index: 2; /* above the .work-phone backdrop (z-index:0) */
+  width: 100%;
+  height: clamp(320px, 40vh, 460px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  perspective: 1600px;
+  /* Soft fade-to-black on the left + right edges so cards appear to come
+     out of / dissolve into the dark background at the carousel's ends —
+     reads as if they're emerging from the screen. */
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 14%,
+    #000 86%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 14%,
+    #000 86%,
+    transparent 100%
+  );
+  /* Nudged left so the carousel sits closer to the title list rather
+     than hugging the column's right edge. */
+  transform: translateX(-8%);
+}
+
+.work-cards-track {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.9rem, 1.6vw, 1.8rem);
+  transform-style: preserve-3d;
+  will-change: transform;
+  /* JS sets translateX per scroll frame to slide the track inside the
+     window so the active card sits at the centre. */
+  transition: transform 0.18s ease-out;
+}
+
+.work-card {
+  flex: 0 0 auto;
+  width: clamp(150px, 13vw, 210px);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #111;
+  box-shadow:
+    0 24px 44px rgba(0, 0, 0, 0.5),
+    0 8px 14px rgba(0, 0, 0, 0.32);
+  transform-origin: center;
+  /* No `will-change` — letting the browser auto-promote when transforms
+     change is cheaper than always-on layer promotion across 18 cards. */
+  backface-visibility: hidden;
+  transition: transform 0.18s ease-out, filter 0.18s ease-out;
+}
+
+.work-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Native per-type aspect ratios — square posts, vertical stories & reels,
+   landscape analytics dashboards. */
+.work-card.is-post      { aspect-ratio: 1 / 1; }
+.work-card.is-story     { aspect-ratio: 9 / 16; }
+.work-card.is-reel      { aspect-ratio: 9 / 16; }
+.work-card.is-dashboard {
+  aspect-ratio: 16 / 10;
+  /* Dashboards are landscape, so on the carousel they need a bit more
+     horizontal room than the square / vertical cards. */
+  width: clamp(220px, 19vw, 320px);
+}
+.work-card.is-dashboard img { object-fit: contain; background: #0c0c0e; }
+
+/* Slot positions are now JS-driven (Services.jsx applyCarousel) so cards
+   can drift right → left as the user scrolls. The static pos-N rules
+   that used to live here have been removed. */
+
+.work-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* All carousel cards share a single 9:16 aspect (set on .work-card) so the
+   row reads consistently. The is-post/is-story/is-reel modifiers are kept
+   for any future per-type styling but no longer override the aspect. */
+
+/* === The phone itself === */
+
+.work-phone {
+  /* Backdrop phone — sits behind the carousel, anchored to the right
+     side of the column so the carousel scrolls across it from the left. */
+  position: absolute;
+  top: 50%;
+  right: 2%;
+  z-index: 0;
+  width: clamp(220px, 18vw, 300px);
+  aspect-ratio: 9 / 19.5;
+  transform: translateY(-50%) rotateY(-6deg) rotateX(1deg);
+  transform-style: preserve-3d;
+  filter:
+    drop-shadow(0 30px 50px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 12px 18px rgba(0, 0, 0, 0.35));
+}
+
+.work-phone-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 14% / 6.6%;
+  background: linear-gradient(155deg, #2c2d31 0%, #1a1a1c 45%, #0c0c0e 100%);
+  padding: 3.5%;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.08),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.18),
+    inset 0 -1.5px 1px rgba(0, 0, 0, 0.6);
+}
+
+/* Hardware buttons */
+.work-phone-btn {
+  position: absolute;
+  background: linear-gradient(to right, #1a1a1c, #2a2b2d);
+  border-radius: 1.5px;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+.work-phone-btn-mute   { left: -2px; top: 11%; width: 3px; height: 3.5%; }
+.work-phone-btn-vol-up { left: -3px; top: 19%; width: 4px; height: 7%;   }
+.work-phone-btn-vol-dn { left: -3px; top: 28%; width: 4px; height: 7%;   }
+.work-phone-btn-power  { right: -3px; top: 22%; width: 4px; height: 11%; }
+
+.work-phone-bezel {
+  width: 100%;
+  height: 100%;
+  border-radius: 11.5% / 5.4%;
+  background: #050505;
+  padding: 2px;
+}
+
+.work-phone-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 11% / 5.2%;
+  background: #000;
+  overflow: hidden;
+  position: relative;
+}
+
+.work-phone-island {
+  position: absolute;
+  top: 2.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32%;
+  height: 4%;
+  background: #000;
+  border-radius: 999px;
+  z-index: 5;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* The phone's content area. Stacks every image from every category; JS sets
+   opacity per scroll frame so two adjacent images crossfade smoothly,
+   including across category boundaries. Each image's CSS class controls its
+   format (square post centred vs. full-bleed vertical for story / reel). */
+.work-phone-content {
+  position: absolute;
+  inset: 0;
+  background: #0b0b0d;
+}
+
+.work-phone-content img {
+  position: absolute;
+  display: block;
+  opacity: 0;
+  will-change: opacity;
+  transition: opacity 0.05s linear;
+}
+
+/* Posts — square image, centred vertically with letterbox top/bottom. */
+.work-phone-content img.is-post {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+/* Stories & Reels — full-bleed vertical, fills the entire screen. */
+.work-phone-content img.is-story,
+.work-phone-content img.is-reel {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* === Counter === */
+
+.work-counter {
+  margin-top: auto;
+  align-self: flex-end;
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  display: flex;
+  gap: 0.35rem;
+  letter-spacing: 0.11em;
+}
+
+.work-counter .current { color: var(--accent); }
+.work-counter .divider { opacity: 0.5; }
+
+/* === Tablet / mobile === */
+
+@media (max-width: 1100px) {
+  .work-card { width: clamp(150px, 14vw, 200px); }
+}
+
+@media (max-width: 819px) {
+  /* Mirror desktop: 100vh-pinned stage with the scroll-driven title list
+     on top and the 3D phone + horizontal coverflow on the bottom. Just
+     sized down so the whole thing fits on a phone screen. */
+  .work-stage {
+    padding: 3rem 1rem 1.5rem;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .work-label {
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-bottom: 0.75rem;
+  }
+  .work-label p { font-size: 0.7rem; letter-spacing: 0.19em; }
+
+  /* Stack vertically using flex (not grid) — flex with explicit fixed
+     heights on each child is the most reliable layout pattern across
+     mobile browsers; grid + 1fr was repeatedly collapsing rows. */
+  .work-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* === TOP: scroll-driven title list (pinned with the stage) === */
+
+  .work-list-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 0 0 auto;       /* fixed natural height — top of section */
+    gap: 0.4rem;
+    margin-top: 3rem;
+  }
+  .work-list-viewport {
+    width: 100%;
+    height: 110px;        /* fixed instead of clamp/vh — never collapses */
+    overflow: hidden;
+    -webkit-mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 28%, #000 72%, transparent 100%);
+    mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 28%, #000 72%, transparent 100%);
+  }
+  .work-list { text-align: center; }
+  .work-list-item {
+    font-size: 1.85rem;
+    padding: 0.3em 0;
+    text-align: center;
+    white-space: normal;
+  }
+  .work-tagline {
+    position: relative;
+    min-height: 2.4rem;
+    text-align: center;
+    width: 100%;
+  }
+  .work-tagline-line {
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, 14px);
+    max-width: min(34ch, calc(100vw - 2rem));
+    text-align: center;
+    font-size: 1.15rem;
+  }
+  .work-tagline-line.is-active { transform: translate(-50%, 0); }
+
+  /* === BOTTOM: phone + horizontal coverflow (also pinned with stage) === */
+
+  .work-phone-col {
+    width: 100%;
+    perspective: 1200px;
+    flex: 1 1 auto;
+    min-height: 280px;
+    display: block;       /* not flex — coverflow does its own layout */
+    position: relative;
+    margin-top: 4.5rem;  /* nudges the carousel + phone down on mobile */
+  }
+  .work-coverflow {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    display: block;
+  }
+
+  /* Carousel "window" — desktop uses translateX(-8%) and a height clamp
+     because the phone sits to its right; on mobile the phone is dead-
+     centre so the window is full-width centred too. */
+  .work-cards-cyl {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-6%);
+    perspective: 1200px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    mask-image:
+      linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    z-index: 2;
+  }
+
+  /* Phone pinned to the right edge of the column (mirrors desktop).
+     The desktop's `rotateY(-6deg) rotateX(1deg)` 3D tilt + dual
+     drop-shadow filters were the dominant paint cost on mobile —
+     killed entirely on small screens. Replaced with a cheap box-shadow
+     on the phone frame instead (rounded-rectangle, no shape-aware
+     filter required). */
+  .work-phone {
+    width: 170px;
+    left: auto;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    filter: none;
+  }
+  .work-phone-frame {
+    box-shadow:
+      0 18px 36px rgba(0, 0, 0, 0.55),
+      0 6px 12px rgba(0, 0, 0, 0.35),
+      inset 0 0 0 1.5px rgba(255, 255, 255, 0.08),
+      inset 0 1.5px 1px rgba(255, 255, 255, 0.18),
+      inset 0 -1.5px 1px rgba(0, 0, 0, 0.6);
+  }
+  .work-coverflow,
+  .work-cards-cyl {
+    perspective: none;          /* drop the 3D context on mobile */
+    transform-style: flat;
+  }
+
+  /* Smaller card sizes — same horizontal carousel layout, just scaled. */
+  .work-card { width: 110px; }
+  .work-card.is-dashboard { width: 150px; }
+}
+
+@media (max-width: 480px) {
+  .work-stage { padding: 2.5rem 0.75rem 1rem; }
+  .work-label { gap: 0.25rem; margin-bottom: 0.6rem; }
+  .work-label p { font-size: 0.65rem; }
+
+  .work-list-viewport { height: 90px; }
+  .work-list-item { font-size: 1.5rem; padding: 0.25em 0; }
+  .work-tagline { min-height: 2rem; }
+  .work-tagline-line { font-size: 1.02rem; }
+
+  .work-phone-col { min-height: 240px; }
+  .work-coverflow { min-height: 240px; }
+  .work-phone { width: 140px; }
+  .work-card { width: 92px; }
+  .work-card.is-dashboard { width: 130px; }
+}

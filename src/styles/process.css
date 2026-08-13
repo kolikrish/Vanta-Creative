@@ -1,0 +1,339 @@
+.process {
+  position: relative;
+  width: 100%;
+  padding: 10rem 1.25rem;
+  background: var(--bg);
+  overflow: hidden;
+  z-index: 2;
+}
+
+.process .process-head {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  max-width: 1400px;
+  margin: 0 auto 6rem;
+  gap: 3rem;
+}
+
+.process .process-head .label { color: var(--text-dim); }
+
+.process .process-head h2 {
+  font-family: var(--font-display);
+  max-width: 18ch;
+  color: var(--text);
+  font-size: clamp(2.4rem, 5.4vw, 5.4rem);
+  line-height: 1.1;
+  letter-spacing: 0em;
+  word-spacing: 0.08em;
+}
+
+/* Arrow is now an inline flex item next to the heading instead of an
+   absolutely-positioned overlay. Previously, on Android (and any browser
+   that rendered the display font slightly wider than expected), the
+   absolute `left: clamp(...)` value landed the arrow on top of the
+   wrapping h2 text. Inline placement guarantees the heading and arrow
+   never overlap regardless of viewport / font metrics. */
+.process .process-arrow {
+  position: relative;
+  flex: 0 0 auto;
+  align-self: flex-end;
+  width: clamp(48px, 4.2vw, 84px);
+  aspect-ratio: 1 / 1;
+  pointer-events: none;
+  z-index: 2;
+  -webkit-mask: url("/arrow-logo.png") no-repeat center / contain;
+          mask: url("/arrow-logo.png") no-repeat center / contain;
+  transform: scaleX(-1) translateY(clamp(0.85rem, 1.6vw, 1.4rem));
+  background-color: var(--c-mint);
+  animation: process-arrow-hue 9s linear infinite;
+}
+
+.process .process-arrow svg,
+.process .process-arrow img { display: none; }
+
+@keyframes process-arrow-hue {
+  0%   { background-color: var(--c-mint); }
+  20%  { background-color: var(--c-blue); }
+  40%  { background-color: var(--c-pink); }
+  60%  { background-color: var(--c-red); }
+  80%  { background-color: var(--c-yellow); }
+  100% { background-color: var(--c-mint); }
+}
+
+.process .process-puzzle {
+  position: absolute;
+  top: 50%;
+  right: clamp(0rem, 4vw, 4rem);
+  transform: translateY(-50%);
+  width: clamp(200px, 24vw, 340px);
+  height: clamp(200px, 24vw, 340px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Mini puzzle is mobile-only — hide it on desktop where there's
+   already room for the full-size puzzle on its own. */
+.process .process-puzzle.process-puzzle-mini { display: none; }
+
+.process .process-puzzle .pp {
+  position: absolute;
+  width: 50%;
+  aspect-ratio: 1 / 1;
+  display: block;
+  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.35));
+  will-change: transform;
+}
+
+.process .process-puzzle .pp svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+
+/* Assembled (resting) positions — pieces touch in a 2x2 grid. */
+.process .process-puzzle .pp-1 { top: 0;   left: 0;   animation: pp-slide-1 20s ease-in-out infinite; }
+.process .process-puzzle .pp-2 { top: 0;   left: 50%; animation: pp-slide-2 20s ease-in-out infinite; }
+.process .process-puzzle .pp-3 { top: 50%; left: 0;   animation: pp-slide-3 20s ease-in-out infinite; }
+.process .process-puzzle .pp-4 { top: 50%; left: 50%; animation: pp-slide-4 20s ease-in-out infinite; }
+/* Shape morph is driven by an SVG <animate> on each piece's path (see Process.jsx). */
+
+/* Sliding-puzzle dance — pieces NEVER rotate; they only translate up, down,
+   left, or right. Each quarter, one piece slides out of frame and an adjacent
+   piece slides into the empty slot to keep the assembly fitting together,
+   then both return. The "leading" piece rotates clockwise around the 2x2:
+     Q1 (0–25%):   pp-1 up,    pp-2 left  (pp-2 fills TL)
+     Q2 (25–50%):  pp-2 right, pp-4 up    (pp-4 fills TR)
+     Q3 (50–75%):  pp-4 down,  pp-3 right (pp-3 fills BR)
+     Q4 (75–100%): pp-3 left,  pp-1 down  (pp-1 fills BL) */
+
+@keyframes pp-slide-1 {
+  /* Q1 lead: slides up & out, returns. Q4 support: slides down to BL, returns. */
+  0%   { transform: translate(0, 0); }
+  5%   { transform: translate(0, -110%); }
+  20%  { transform: translate(0, -110%); }
+  25%  { transform: translate(0, 0); }
+  80%  { transform: translate(0, 0); }
+  85%  { transform: translate(0, 100%); }
+  90%  { transform: translate(0, 100%); }
+  95%  { transform: translate(0, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes pp-slide-2 {
+  /* Q1 support: slides left to TL, returns. Q2 lead: slides right & out, returns. */
+  0%   { transform: translate(0, 0); }
+  5%   { transform: translate(0, 0); }
+  10%  { transform: translate(-100%, 0); }
+  15%  { transform: translate(-100%, 0); }
+  20%  { transform: translate(0, 0); }
+  30%  { transform: translate(110%, 0); }
+  45%  { transform: translate(110%, 0); }
+  50%  { transform: translate(0, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes pp-slide-3 {
+  /* Q3 support: slides right to BR, returns. Q4 lead: slides left & out, returns. */
+  0%   { transform: translate(0, 0); }
+  55%  { transform: translate(0, 0); }
+  60%  { transform: translate(100%, 0); }
+  65%  { transform: translate(100%, 0); }
+  70%  { transform: translate(0, 0); }
+  80%  { transform: translate(-110%, 0); }
+  95%  { transform: translate(-110%, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes pp-slide-4 {
+  /* Q2 support: slides up to TR, returns. Q3 lead: slides down & out, returns. */
+  0%   { transform: translate(0, 0); }
+  30%  { transform: translate(0, 0); }
+  35%  { transform: translate(0, -100%); }
+  40%  { transform: translate(0, -100%); }
+  45%  { transform: translate(0, 0); }
+  55%  { transform: translate(0, 110%); }
+  70%  { transform: translate(0, 110%); }
+  75%  { transform: translate(0, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .process .process-puzzle .pp { animation: none; }
+}
+
+
+/* When the section is off-screen, pause the CSS keyframe sliding on the
+   puzzle pieces (the SMIL <animate> on each path is paused via
+   visibility:hidden, which the browser respects for SVG). Big perf win:
+   no continuous scroll-driven repaint when the user is far away. */
+.process.is-offscreen .process-puzzle .pp {
+  animation-play-state: paused;
+}
+.process.is-offscreen .process-puzzle svg {
+  visibility: hidden;
+}
+.process.is-offscreen .process-arrow {
+  animation-play-state: paused;
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.process-step {
+  padding: 2.5rem 1.5rem;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-height: 360px;
+  transition: background 0.5s ease;
+}
+
+.process-step:hover { background: var(--bg-2); }
+
+.process-step .num {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--text-mute);
+  letter-spacing: 0.08em;
+}
+
+.process-step h3 {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 400;
+  letter-spacing: 0em;
+  color: var(--text);
+}
+
+.process-step p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+  text-transform: none;
+  letter-spacing: 0.07em;
+  margin-top: auto;
+}
+
+@media (max-width: 900px) {
+  /* Mobile: let the puzzle overflow past the section's bottom edge as an
+     overlay onto whatever section follows, instead of being clipped. */
+  .process { padding: 1.5rem 1.25rem 5rem; overflow: visible; }
+  .process .process-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    margin: 0 auto 1rem;
+  }
+  /* Heading sits above the puzzle so the pieces show through behind the text. */
+  .process .process-head h2 { position: relative; z-index: 2; }
+  /* Mobile keeps the arrow as an absolute overlay (positions
+     fine-tuned earlier for the column-stacked head). Desktop uses
+     inline-flex placement to avoid the Android overlap; this rule
+     re-enables absolute positioning for ≤900px only. */
+  .process .process-arrow {
+    position: absolute;
+    align-self: auto;
+    width: clamp(70px, 18vw, 110px);
+    left: auto;
+    /* Was right: clamp(9rem, 37vw, 16rem). On landscape narrow phones
+       (568px wide × 320px tall) 37vw came to ~210px which floated the
+       arrow off-screen left of the heading. Tightened so it stays
+       anchored near the heading on every phone orientation. */
+    right: clamp(6rem, 22vw, 12rem);
+    bottom: clamp(13.75rem, 35.5vw, 18.5rem);
+    transform: scaleX(-1) translateY(clamp(0.65rem, 2vw, 1.15rem));
+  }
+  /* Mobile: puzzle is absolutely positioned at the top-right of the head
+     box and sits BEHIND the heading text (z-index: 0 vs heading z-index: 2).
+     Because it's out of flow, the section no longer needs reserved space
+     below the heading — that's why padding-bottom is small here. */
+  .process .process-puzzle {
+    position: absolute;
+    /* Was top: clamp(7.5rem, 19vw, 12rem) — bumped down so the
+       puzzle sits clearly below the "measured system" heading
+       instead of crowding the line of text. */
+    top: clamp(10rem, 25vw, 15rem);
+    right: clamp(3rem, 7vw, 5rem);
+    left: auto;
+    width: clamp(120px, 27vw, 170px);
+    height: clamp(120px, 27vw, 170px);
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    transform: scale(0.9);
+    transform-origin: center top;
+    z-index: 0;
+  }
+  .process .process-puzzle .pp { filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3)); }
+
+  /* Mini puzzle — mobile-only, anchored to the LEFT side and sitting
+     slightly below the main puzzle. Same animation, smaller footprint,
+     so the section reads as a balanced two-puzzle motif. */
+  .process .process-puzzle.process-puzzle-mini {
+    display: block;
+    top: clamp(13rem, 33vw, 19rem);
+    right: auto;
+    left: clamp(1.5rem, 5vw, 4rem);
+    width: clamp(78px, 18vw, 110px);
+    height: clamp(78px, 18vw, 110px);
+    transform: scale(0.85);
+    opacity: 0.85;
+  }
+  /* 2x2 grid — left column left-aligned, right column right-aligned. */
+  .process-grid { grid-template-columns: 1fr 1fr; }
+  .process-step { min-height: 220px; padding: 1.75rem 1.1rem; gap: 1rem; }
+  .process-step h3 { font-size: 1.25rem; }
+  .process-step p { font-size: 1.02rem; line-height: 1.5; }
+  .process-step .num { font-size: 0.7rem; }
+
+  .process-step:nth-child(2),
+  .process-step:nth-child(4) {
+    text-align: right;
+    align-items: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .process { padding: 1rem 1rem 8rem; }
+  .process-step { padding: 1.4rem 0.85rem; min-height: 200px; gap: 0.85rem; }
+  .process-step h3 { font-size: 1.15rem; }
+  .process-step p { font-size: 0.78rem; line-height: 1.45; }
+  .process-step .num { font-size: 0.65rem; }
+
+  .process .process-puzzle {
+    width: clamp(95px, 28vw, 130px);
+    height: clamp(95px, 28vw, 130px);
+    /* Pushed down on small phones too so the puzzle sits well
+       under the heading line. */
+    top: clamp(13.5rem, 36vw, 18rem);
+    right: clamp(2.5rem, 6vw, 4rem);
+    margin: 0;
+  }
+  .process .process-puzzle.process-puzzle-mini {
+    width: clamp(58px, 18vw, 90px);
+    height: clamp(58px, 18vw, 90px);
+    top: clamp(15rem, 40vw, 20rem);
+    left: clamp(1rem, 4vw, 3rem);
+    transform: scale(0.9);
+    transform-origin: center top;
+  }
+
+  .process .process-arrow {
+    width: clamp(60px, 20vw, 90px);
+    right: clamp(6.5rem, 33.5vw, 12rem);
+    bottom: clamp(10.75rem, 31.5vw, 15.5rem);
+    transform: scaleX(-1) translateY(0.85rem);
+  }
+}

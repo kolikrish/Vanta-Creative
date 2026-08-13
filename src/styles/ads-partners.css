@@ -1,0 +1,348 @@
+.ads-partners {
+  position: relative;
+  width: 100%;
+  padding: 6rem 1.25rem;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+/* Ambient colour wash — was implemented with `filter: blur(120px)` on a
+   520x520 element which is one of the most expensive paint operations
+   on every scroll frame. Replaced with a CSS `radial-gradient` painted
+   directly on the section background — visually nearly identical, no
+   per-frame blur cost. */
+.ads-partners {
+  background:
+    radial-gradient(420px 420px at 14% 22%, rgba(var(--c-pink-rgb, 238, 87, 137), 0.12), transparent 65%),
+    radial-gradient(420px 420px at 86% 80%, rgba(var(--c-blue-rgb, 77, 108, 179), 0.12), transparent 65%),
+    var(--bg);
+}
+
+.ap-head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  max-width: 1400px;
+  margin: 0 auto 2.75rem;
+  gap: 3rem;
+}
+
+.ap-head .label { color: var(--text-dim); }
+
+.ap-head h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  max-width: 38ch;
+  color: var(--text);
+  letter-spacing: 0em;
+  line-height: 1.3;
+  opacity: 0.92;
+}
+
+/* Stacked dashboard cards ----------------------------------------- */
+
+.ap-stack {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.ap-card {
+  position: relative;
+  padding: 1.75rem 1.85rem 1.5rem;
+  /* Solid background instead of glass + backdrop-filter. backdrop-filter
+     was the dominant per-frame paint cost on this section and made
+     scroll jitter on every device. The card now uses an opaque base —
+     visually almost the same once the section's ambient gradients
+     paint behind it. */
+  background:
+    linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.015) 100%),
+    rgba(16, 14, 18, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: border-color 0.35s ease, transform 0.45s ease;
+}
+
+.ap-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+.ap-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.06), transparent 60%);
+}
+
+.ap-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.ap-platform {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ap-platform-name {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0em;
+  color: var(--text);
+}
+
+.ap-platform-tag {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  color: var(--text-dim);
+}
+
+/* Badge ------------------------------------------------------------ */
+
+.ap-badge {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.65rem 1rem;
+  background: #fff;
+  color: #0b0b0d;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px -12px rgba(0,0,0,0.45);
+  min-width: 180px;
+}
+
+.ap-badge-mark {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0em;
+  color: #232f3e; /* Amazon-ish navy */
+}
+
+.ap-badge--meta .ap-badge-mark {
+  color: #1877f2; /* Meta blue */
+}
+
+.ap-badge-line {
+  font-size: 0.78rem;
+  color: #4a4a52;
+  letter-spacing: 0.07em;
+}
+
+.ap-badge-line strong {
+  color: #008a72;
+  font-weight: 600;
+}
+
+.ap-badge--meta .ap-badge-line strong {
+  color: #1877f2;
+}
+
+/* Dashboard area --------------------------------------------------- */
+
+.ap-dash {
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  background: rgba(8, 8, 10, 0.55);
+  padding: 1.1rem 1.25rem 0.9rem;
+}
+
+.ap-dash-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.ap-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-right: 0.5rem;
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+.ap-metric:last-child { border-right: none; }
+
+.ap-metric-label {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.09em;
+  color: var(--text-dim);
+}
+
+.ap-metric-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  letter-spacing: 0em;
+  color: var(--text);
+}
+
+.ap-metric-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* Chart ------------------------------------------------------------ */
+
+.ap-chart {
+  display: block;
+  width: 100%;
+  height: 130px;
+  margin-top: 0.25rem;
+}
+
+.ap-dash-axis {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0.1rem 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+/* Responsive ------------------------------------------------------ */
+
+@media (max-width: 900px) {
+  .ads-partners { padding: 4rem 1rem; }
+
+  /* The desktop ambient gradient is reduced on mobile via the
+     section's background-image so we don't need the heavy pseudos. */
+  .ads-partners {
+    background:
+      radial-gradient(280px 280px at 5% 12%, rgba(var(--c-pink-rgb, 238, 87, 137), 0.10), transparent 60%),
+      radial-gradient(280px 280px at 95% 85%, rgba(var(--c-blue-rgb, 77, 108, 179), 0.10), transparent 60%),
+      var(--bg);
+  }
+
+  .ap-head {
+    flex-direction: column;
+    margin-bottom: 1.75rem;
+    gap: 0.85rem;
+  }
+  .ap-head h3 { font-size: 1.15rem; max-width: 100%; opacity: 1; }
+  /* On phone, the desktop dim greys (text-dim/text-mute) wash out
+     against the dark card background. Lift the secondary labels closer
+     to text so chips and axis ticks stay legible. */
+  .ap-platform-tag,
+  .ap-metric-label,
+  .ap-dash-axis {
+    color: color-mix(in srgb, var(--text) 78%, transparent);
+  }
+
+  .ap-stack { gap: 1rem; }
+
+  .ap-card {
+    padding: 1.25rem 1.1rem 1rem;
+    border-radius: 16px;
+  }
+
+  /* Stack platform info on top of the verified badge on small screens
+     so neither has to compete for horizontal space. */
+  .ap-card-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .ap-platform-name { font-size: 1.2rem; }
+  .ap-platform-tag {
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+  }
+
+  .ap-badge {
+    align-self: flex-start;
+    min-width: 0;
+    padding: 0.5rem 0.85rem;
+    border-radius: 10px;
+  }
+  .ap-badge-mark { font-size: 1.1rem; }
+  .ap-badge-line { font-size: 0.68rem; }
+
+  .ap-dash {
+    padding: 0.9rem 0.85rem 0.7rem;
+    border-radius: 12px;
+  }
+
+  /* 2-up chip grid; row gap acts as a quiet separator instead of the
+     desktop right-borders. */
+  .ap-dash-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem 1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .ap-metric {
+    padding-right: 0;
+    border-right: none;
+    min-width: 0;
+  }
+  .ap-metric-label { font-size: 0.62rem; letter-spacing: 0.1em; }
+  .ap-metric-value {
+    font-size: 1.1rem;
+    gap: 0.4rem;
+    /* Allow long values like ₹4.6L / 11,321 to wrap if they ever overflow
+       a narrow chip cell instead of pushing siblings out. */
+    flex-wrap: wrap;
+  }
+  .ap-metric-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+  .ap-chart { height: 100px; }
+
+  /* Drop every other axis label so it doesn't crowd. */
+  .ap-dash-axis span:nth-child(even) { display: none; }
+  .ap-dash-axis { font-size: 0.6rem; padding-top: 0.25rem; }
+}
+
+@media (max-width: 480px) {
+  .ads-partners { padding: 3rem 0.75rem; }
+
+  .ap-head { margin-bottom: 1.4rem; }
+  .ap-head .label { font-size: 0.7rem; letter-spacing: 0.19em; }
+  .ap-head h3 { font-size: 1.1rem; line-height: 1.35; }
+
+  .ap-card { padding: 1.05rem 0.9rem 0.85rem; border-radius: 14px; }
+
+  .ap-platform-name { font-size: 1.15rem; }
+  .ap-platform-tag { font-size: 0.6rem; }
+
+  .ap-badge { padding: 0.45rem 0.75rem; }
+  .ap-badge-mark { font-size: 0.78rem; }
+  .ap-badge-line { font-size: 0.64rem; }
+
+  .ap-dash { padding: 0.7rem 0.7rem 0.55rem; }
+  .ap-dash-row { gap: 0.7rem 0.75rem; }
+  .ap-metric-value { font-size: 1.08rem; }
+
+  .ap-chart { height: 80px; }
+
+  /* Show only first/last axis tick on the smallest screens — anything more
+     overlaps. */
+  .ap-dash-axis span { display: none; }
+  .ap-dash-axis span:first-child,
+  .ap-dash-axis span:last-child { display: inline; }
+}

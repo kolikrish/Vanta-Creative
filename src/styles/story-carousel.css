@@ -1,0 +1,118 @@
+.story-carousel {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 3rem 2rem 4rem;
+}
+
+.story-carousel-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(440px, 72vh, 760px);
+  perspective: 1800px;
+  perspective-origin: 50% 50%;
+  cursor: grab;
+  user-select: none;
+  /* `manipulation` instead of `pan-y` so pinch-zoom (both directions)
+     still works when the user happens to be over this carousel. */
+  touch-action: manipulation;
+  overflow: hidden;
+}
+
+.story-carousel-stage:active {
+  cursor: grabbing;
+}
+
+.story-carousel-stage::before,
+.story-carousel-stage::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.story-carousel-stage::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg, #0d0d0d), transparent);
+}
+
+.story-carousel-stage::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg, #0d0d0d), transparent);
+}
+
+.story-carousel-ring {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: translateZ(calc(-1 * var(--radius, 480px))) rotateY(var(--rot, 0deg));
+  will-change: transform;
+}
+
+.story-carousel-tile {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--tile-w, 240px);
+  aspect-ratio: 9 / 16;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--bg-2, #161616);
+  cursor: pointer;
+  border-radius: 18px;
+  overflow: hidden;
+  transform: translate(-50%, -50%)
+    rotateY(calc(var(--i) * (360deg / var(--n))))
+    translateZ(var(--radius, 480px));
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+  transition: box-shadow 0.4s ease, filter 0.4s ease;
+  filter: brightness(0.6) saturate(0.85);
+}
+
+.story-carousel-tile.is-active {
+  filter: brightness(1) saturate(1);
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.6);
+}
+
+.story-carousel-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  display: block;
+}
+
+.story-carousel-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.21em;
+  color: var(--text-dim);
+}
+
+.story-carousel-count {
+  color: var(--text);
+}
+
+@media (max-width: 820px) {
+  .story-carousel { padding: 2rem 1rem 3rem; }
+  .story-carousel-stage { height: clamp(380px, 64vh, 600px); }
+  .story-carousel-stage::before,
+  .story-carousel-stage::after { width: 8%; }
+  .story-carousel-meta { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+}
+
+@media (max-width: 480px) {
+  .story-carousel { padding: 1.5rem 0.5rem 2.5rem; }
+  .story-carousel-stage { height: clamp(320px, 60vh, 480px); }
+  .story-carousel-tile { width: var(--tile-w-mobile, 180px); }
+}

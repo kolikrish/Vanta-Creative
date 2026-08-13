@@ -1,0 +1,538 @@
+/* ==========================================================
+   CONTACT — Multi-act "Create With Us" stage (black)
+   Theatrical, full-bleed black stage with 4 acts.
+   ========================================================== */
+
+.contact-page {
+  padding-top: 0;
+  background: #000;
+}
+
+.cw-stage {
+  position: relative;
+  min-height: 100vh;
+  padding: 9rem 1.5rem 7rem;
+  background: #000;
+  color: var(--text);
+  /* Was overflow: hidden — at high zoom the act labels and form
+     fields could clip silently. clip on the X axis only prevents
+     horizontal scroll from the decorative noise svg without
+     blocking the form from growing tall when zoom enlarges inputs. */
+  overflow-x: clip;
+  isolation: isolate;
+}
+
+.cw-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.7'/></svg>");
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cw-stage-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cw-stage-inner.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cw-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.21em;
+  color: var(--accent);
+  margin-bottom: 2rem;
+}
+
+.cw-stage-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 7vw, 7.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin: 0 0 3.5rem;
+  max-width: 22ch;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+  text-wrap: balance;
+}
+
+.cw-stage-sub {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  line-height: 1.5;
+  color: #ffffff;
+  text-transform: none;
+  letter-spacing: 0.07em;
+  max-width: 60ch;
+  margin: -1.5rem 0 3rem;
+  opacity: 0.85;
+}
+
+/* ---------- Form shell ---------- */
+.cw-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.015);
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+}
+
+.cw-field {
+  position: relative;
+  padding: 1.6rem 1.8rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: background 0.25s ease;
+}
+
+.cw-field:last-of-type { border-bottom: none; }
+.cw-field:focus-within { background: rgba(255, 122, 61, 0.04); }
+
+.cw-label {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.21em;
+  color: var(--accent);
+}
+
+.cw-input,
+.cw-select,
+.cw-textarea {
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+  font-weight: 400;
+  color: #ffffff;
+  padding: 0.2rem 0;
+  letter-spacing: 0em;
+}
+
+.cw-input::placeholder,
+.cw-textarea::placeholder {
+  color: #ffffff;
+  opacity: 0.4;
+}
+
+.cw-textarea {
+  min-height: 120px;
+  resize: vertical;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.cw-select-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cw-select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-right: 2rem;
+}
+
+.cw-select option {
+  background: #0a0a0a;
+  color: var(--text);
+}
+
+.cw-caret {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  color: var(--accent);
+  pointer-events: none;
+}
+
+/* ---------- Checkboxes ---------- */
+.cw-checks {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.9rem 2rem;
+  margin-top: 0.4rem;
+}
+
+.cw-checks-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.cw-check {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.cw-check input { display: none; }
+
+.cw-check-box {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 3px;
+  background: transparent;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.cw-check.is-on .cw-check-box {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.cw-check.is-on .cw-check-box::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: #0a0a0a;
+  border-radius: 1px;
+}
+
+.cw-check-label {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  letter-spacing: 0.07em;
+  text-transform: none;
+  color: #ffffff;
+}
+
+/* ---------- Pills ---------- */
+.cw-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.cw-pill input { display: none; }
+
+.cw-pill span {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  letter-spacing: 0.07em;
+  text-transform: none;
+  color: #ffffff;
+}
+
+.cw-pill:hover { border-color: var(--accent); }
+.cw-pill.is-on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.cw-pill.is-on span { color: #0a0a0a; }
+
+/* ---------- Actions ---------- */
+.cw-actions {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--border-strong);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cw-btn {
+  flex: 1;
+  padding: 1.4rem 1.8rem;
+  background: transparent;
+  color: var(--accent);
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.23em;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.cw-btn:hover {
+  background: var(--accent);
+  color: #0a0a0a;
+}
+
+.cw-btn-ghost {
+  flex: 0 0 auto;
+  border-right: 1px solid var(--border-strong);
+  color: #ffffff;
+}
+.cw-btn-ghost:hover {
+  background: #ffffff;
+  color: #0a0a0a;
+}
+
+.cw-btn-send { background: var(--accent); color: #0a0a0a; }
+.cw-btn-send:hover { background: #fff; color: #0a0a0a; }
+
+/* ---------- Acts navigation ---------- */
+.cw-acts {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  background: rgba(10, 10, 10, 0.85);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  z-index: 50;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+}
+
+.cw-act {
+  background: transparent;
+  border: none;
+  padding: 0.9rem 1.2rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.23em;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.cw-act:hover { color: #ffffff; }
+.cw-act.is-current { color: var(--accent); }
+.cw-act.is-done { color: #ffffff; }
+
+/* ---------- Stage corner labels ---------- */
+.cw-corner {
+  position: absolute;
+  top: 6rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.21em;
+  color: var(--accent);
+  z-index: 2;
+}
+
+.cw-corner-tl { left: 1.5rem; }
+.cw-corner-tr { right: 1.5rem; }
+
+/* ---------- Recap (FINALE) ---------- */
+.cw-recap {
+  display: flex;
+  flex-direction: column;
+}
+
+.cw-recap-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 1.2rem;
+  padding: 1.2rem 1.8rem;
+  border-bottom: 1px solid var(--border);
+  align-items: baseline;
+}
+
+.cw-recap-row:last-of-type { border-bottom: none; }
+
+.cw-recap-k {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.21em;
+  color: var(--accent);
+}
+
+.cw-recap-v {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: #ffffff;
+  word-break: break-word;
+  letter-spacing: 0em;
+}
+
+.cw-recap-msg {
+  white-space: pre-wrap;
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+/* ---------- Thank-you ---------- */
+.cw-thanks {
+  padding: 2rem 1.8rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.cw-thanks-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.21em;
+  color: var(--accent);
+}
+
+.cw-thanks-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -0.005em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.cw-thanks-copy {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: #ffffff;
+  text-transform: none;
+  letter-spacing: 0.07em;
+  opacity: 0.85;
+  max-width: 50ch;
+}
+
+/* ---------- Direct-contact aside ---------- */
+.cw-direct {
+  margin-top: 3rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem 2rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.cw-direct-block { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+
+.cw-direct-k {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.21em;
+  color: var(--accent);
+}
+
+.cw-direct-v {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: #ffffff;
+  letter-spacing: 0em;
+  word-break: break-word;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a.cw-direct-v:hover { color: var(--accent); }
+
+.cw-direct-row { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.cw-social {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  font-family: var(--font-body);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cw-social-k {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.21em;
+  color: var(--accent);
+  width: 1.8rem;
+  flex-shrink: 0;
+}
+
+.cw-social-h {
+  font-size: 0.95rem;
+  color: #ffffff;
+  letter-spacing: 0.07em;
+  text-transform: none;
+  word-break: break-word;
+}
+
+.cw-social:hover .cw-social-h { color: var(--accent); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  .cw-direct { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 820px) {
+  .cw-stage { padding: 7.5rem 1rem 9rem; }
+  .cw-stage-title { font-size: clamp(2.2rem, 10vw, 4.2rem); margin-bottom: 1.75rem; max-width: 100%; }
+  .cw-stage-sub { margin-top: 0; margin-bottom: 2rem; }
+  .cw-field { padding: 1.2rem 1.2rem 1rem; }
+  .cw-checks { grid-template-columns: 1fr; }
+  .cw-actions { flex-direction: column; }
+  .cw-btn { text-align: center; }
+  .cw-btn-ghost { border-right: none; border-bottom: 1px solid var(--border-strong); }
+  .cw-acts {
+    left: 50%;
+    right: auto;
+    bottom: 1rem;
+    transform: translateX(-50%);
+    max-width: calc(100vw - 1.5rem);
+    overflow-x: auto;
+  }
+  .cw-act { padding: 0.7rem 0.8rem; font-size: 0.7rem; flex-shrink: 0; }
+  .cw-corner-tl { display: none; }
+  .cw-direct { grid-template-columns: 1fr 1fr; gap: 1.25rem 1.5rem; }
+  .cw-direct-block { gap: 0.4rem; }
+
+  .cw-recap-row { grid-template-columns: 1fr; gap: 0.4rem; padding: 1rem 1.2rem; }
+}
+
+@media (max-width: 480px) {
+  .cw-stage { padding: 6rem 0.75rem 8rem; }
+  .cw-corner-tr { right: 1rem; font-size: 0.65rem; }
+  .cw-stage-title { font-size: clamp(2rem, 12vw, 3.4rem); }
+  .cw-stage-sub { font-size: 1.08rem; margin-bottom: 1.5rem; }
+  .cw-field { padding: 1rem 1rem 0.85rem; gap: 0.4rem; }
+  .cw-input, .cw-select, .cw-textarea { font-size: 1.15rem; }
+  .cw-textarea { min-height: 90px; font-size: 1.1rem; }
+  .cw-label { font-size: 0.7rem; letter-spacing: 0.17em; }
+  .cw-btn { padding: 1.1rem 1.25rem; font-size: 0.78rem; letter-spacing: 0.19em; }
+  .cw-acts {
+    width: calc(100vw - 1rem);
+    overflow-x: auto;
+  }
+  .cw-act { padding: 0.6rem 0.55rem; font-size: 0.6rem; letter-spacing: 0.15em; }
+  .cw-pill { padding: 0.5rem 0.85rem; }
+  .cw-pill span { font-size: 1.02rem; }
+  .cw-direct { grid-template-columns: 1fr; gap: 1rem; }
+  .cw-direct-v { font-size: 1.08rem; }
+  .cw-social-h { font-size: 1.15rem; }
+  .cw-thanks { padding: 1.5rem 1.25rem; }
+  .cw-thanks-title { font-size: clamp(1.6rem, 9vw, 2.4rem); }
+  .cw-thanks-copy { font-size: 1.15rem; }
+}

@@ -1,0 +1,111 @@
+/* Brush-script signature word that draws in on page open via SVG strokes.
+   Lives on the left empty area of subpage heroes.
+   The SVG itself handles the draw + fill animation — this CSS only places
+   and sizes the box on the page. */
+
+.page-signature {
+  position: absolute;
+  left: 3vw;
+  /* Vertically centred in the 100vh hero — top:50% + translateY
+     puts the signature's own centre on the hero's centre line. */
+  top: 50%;
+  transform: translateY(-50%);
+  /* Bumped substantially — now that the hero H1 above has been
+     removed, the signature word IS the hero. Width/height roughly
+     doubled so "Services" / "Work" / "Studio" / "Brands" reads
+     at proper hero scale. */
+  width: clamp(28rem, 52vw, 58rem);
+  height: clamp(9rem, 18vw, 22rem);
+  /* Color is set per-page via the per-hero overrides below — matches
+     the nav's per-link color so Services / Work / Studio each pick
+     up the same accent on their hero as in the top bar. */
+  color: var(--accent);
+  pointer-events: none;
+  z-index: 1;
+  filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.35));
+  overflow: visible;
+}
+
+/* Per-page colors — match the top-nav per-link palette:
+   Services → yellow (nav nth-child 2)
+   Work     → pink   (nav nth-child 3)
+   Studio   → mint   (nav nth-child 4) */
+.services-hero .page-signature { color: var(--c-yellow); }
+.work-hero     .page-signature { color: var(--c-pink); }
+.about-hero    .page-signature { color: var(--c-mint); }
+
+/* Brands hero has the longest two-line H1 of all subpages ("Brands we
+   / have grown"), so the default top-left signature placement runs
+   straight into the title at wide widths / high zoom. Anchor it to
+   the top-right corner — the H1 lives bottom-left, the copy block
+   lives bottom-right, so the upper-right strip is the only empty
+   pocket where the signature won't collide with text. */
+.brands-page-hero .page-signature {
+  /* Brands hero now uses the same hero-scale signature as the
+     other subpages — left-aligned + vertically centred. */
+  left: 3vw;
+  right: auto;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+@media (max-width: 1100px) {
+  /* Mobile subpage heros all stack vertically (see subpage.css). The
+     signature flows in normal layout at the top of the column instead
+     of being absolutely positioned over the copy. Applied to every
+     subpage hero so services / work / about / brands behave the same
+     on mobile. */
+  .brands-page-hero .page-signature,
+  .services-hero .page-signature,
+  .work-hero .page-signature,
+  .about-hero .page-signature {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    transform: none;
+    margin: 0 auto;
+    width: clamp(18rem, 68vw, 32rem);
+    height: clamp(6rem, 22vw, 12rem);
+  }
+}
+@media (max-width: 820px) {
+  .brands-page-hero .page-signature,
+  .services-hero .page-signature,
+  .work-hero .page-signature,
+  .about-hero .page-signature {
+    width: clamp(15rem, 72vw, 26rem);
+    height: clamp(5rem, 24vw, 10rem);
+  }
+}
+@media (max-width: 480px) {
+  .brands-page-hero .page-signature,
+  .services-hero .page-signature,
+  .work-hero .page-signature,
+  .about-hero .page-signature {
+    width: clamp(13rem, 80vw, 20rem);
+    height: clamp(4rem, 28vw, 7.5rem);
+  }
+}
+
+/* Old absolute-positioned mobile rules (`.page-signature` width/left
+   at 900px/480px and the services-hero left:38vw nudge) were removed
+   when subpage heros switched to a vertical-stack layout on mobile
+   (see the per-hero overrides above + subpage.css). The signature
+   now flows inline at the top of the hero column on every subpage. */
+
+/* Inline-flow handwrite (used inside paragraphs/headings, e.g. Hero "marketing"). */
+.hero-split-handwrite {
+  display: inline-block;
+  vertical-align: baseline;
+  color: var(--accent);
+  width: 1em;            /* placeholder; overridden below by aspect ratio */
+  height: 1.05em;
+  margin: 0 0.05em -0.18em;
+  filter: drop-shadow(0 4px 14px rgba(255, 122, 61, 0.22));
+  /* Yellowtail glyphs are wider than they are tall — stretch the box so
+     letters don't get squished into a 1:1 inline frame. */
+  width: 4.2em;
+  overflow: visible;
+}

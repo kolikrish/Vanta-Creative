@@ -1,0 +1,106 @@
+.featured-work {
+  width: 100vw;
+  min-height: 100svh;
+  padding: 6em 2em 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 3em;
+  position: relative;
+  background: var(--bg, #0a0a0a);
+}
+
+.featured-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  position: relative;
+}
+
+.featured-title-wrapper {
+  position: relative;
+  padding: 0.5em 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.featured-title-wrapper.featured-title-heading {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.25em 0 0.75em;
+}
+
+.featured-title {
+  font-size: clamp(2rem, 5.5vw, 5rem);
+  line-height: 1;
+  margin: 0;
+  letter-spacing: 0em;
+  font-weight: 500;
+}
+
+.featured-title-heading .featured-title {
+  font-size: 0.85rem;
+  letter-spacing: 0.21em;
+  font-weight: 500;
+  opacity: 0.6;
+  line-height: 1.2;
+}
+
+.featured-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18em;
+  padding: 1em;
+  border-radius: 1em;
+  background: rgba(20, 20, 20, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 20;
+  margin: 24px 0 0 24px;
+  will-change: transform, opacity;
+}
+
+.featured-card.is-visible {
+  opacity: 1;
+}
+
+.featured-card-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 0.5em;
+  overflow: hidden;
+  margin-bottom: 0.75em;
+}
+
+.featured-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.featured-card-copy {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+@media (max-width: 900px) {
+  .featured-work { padding: 4em 1.25em 2em; gap: 1.5em; }
+  .featured-title { font-size: clamp(1.6rem, 9vw, 3rem); }
+  .featured-title-heading .featured-title { font-size: 0.78rem; letter-spacing: 0.21em; }
+}
+
+@media (max-width: 720px) {
+  .featured-card {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .featured-work { padding: 3rem 1rem 1.5rem; gap: 1.25em; }
+  .featured-title-wrapper { padding: 0.4em 0; }
+  .featured-title { font-size: clamp(1.4rem, 9.5vw, 2.4rem); }
+}

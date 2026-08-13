@@ -1,0 +1,180 @@
+.tagline {
+  position: relative;
+  width: 100%;
+  min-height: 140vh;
+  padding: 18vh 6vw 18vh;
+  overflow: hidden;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Plain black backdrop — no radial gradients. The section reads on a
+   solid panel; the centred copy and corner logos do all the visual work. */
+.tagline-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--bg);
+  z-index: 0;
+}
+
+.tagline-inner {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  /* Narrower copy column — paragraph wraps to more lines and reads as a
+     tall, dense block. */
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 5vw, 4.5rem);
+}
+
+.tagline-heading {
+  --fill: 0%;
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: none;
+  font-size: clamp(1.8rem, 3.8vw, 3.8rem);
+  line-height: 1.2;
+  letter-spacing: 0em;
+  text-align: left;
+
+  background-image: linear-gradient(
+    180deg,
+    #f4f4f0 0%,
+    #eaeae6 var(--fill),
+    #2e2e33 calc(var(--fill) + 0.5%),
+    #2e2e33 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.tagline-accent {
+  font-style: italic;
+  color: inherit;
+}
+
+/* Prefers "account management" on a single line so the phrase doesn't
+   break mid-pair, but falls back to wrapping at narrow widths / high
+   zoom rather than overflowing the parallax tiles around the heading. */
+.tagline-nowrap {
+  white-space: nowrap;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: none;
+}
+@media (max-width: 900px), (max-height: 760px) {
+  .tagline-nowrap { white-space: normal; }
+}
+
+/* Parallax images scattered around the heading. Each tile is a rounded
+   card with a soft black overlay layered on top, so the assorted brand
+   marks read as a coherent set of accents on the dark section. */
+.tagline-img {
+  position: absolute;
+  z-index: 2;
+  will-change: transform;
+  overflow: hidden;
+  border-radius: 22%;
+  background: #000;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.5);
+}
+
+.tagline-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: none;
+  clip-path: none;
+}
+
+/* Black overlay — sits above the image so every tile picks up the same
+   dimmed treatment regardless of original colour or transparency. */
+.tagline-img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* All tiles share a portrait aspect — the rounded mask makes them read
+   as soft tall pills regardless of source dimensions. */
+.tagline-img { aspect-ratio: 3 / 4; }
+
+/* Balanced 3-on-top / 2-on-bottom grid. Top row uses left-corner +
+   horizontal-centre + right-corner; bottom row uses just the two
+   corners. All five tiles share the same vertical band on each row so
+   the section reads as an aligned frame around the heading instead of
+   five scattered accents. */
+
+/* Top row */
+.tagline-img-1 { top: 5%; left: 4%;  width: 16vw; max-width: 230px; } /* Amazon   — top-left */
+.tagline-img-5 {
+  top: 5%;
+  left: 50%;
+  margin-left: clamp(-115px, -8vw, -80px);
+  width: 16vw;
+  max-width: 230px;
+}                                                                    /* WhatsApp — top-centre */
+.tagline-img-2 { top: 5%; right: 4%; width: 16vw; max-width: 230px; } /* IG       — top-right */
+
+/* Bottom row */
+.tagline-img-3 { bottom: 5%; left: 4%;  width: 17vw; max-width: 250px; } /* Blinkit  — bottom-left */
+.tagline-img-8 { bottom: 5%; right: 4%; width: 17vw; max-width: 250px; } /* Facebook — bottom-right */
+
+@media (max-width: 900px) {
+  .tagline {
+    min-height: 110vh;
+    padding: 12vh 5vw;
+  }
+  .tagline-inner {
+    /* Pull the heading inward so it never lives under the corner tiles. */
+    max-width: 600px;
+    padding: 0 clamp(0.5rem, 4vw, 2rem);
+  }
+  .tagline-heading {
+    font-size: clamp(1.6rem, 6vw, 2.6rem);
+    line-height: 1.2;
+  }
+
+  .tagline-img-1 { width: 24vw; top: 8%; left: 3%; }
+  .tagline-img-2 { width: 24vw; top: 3%; right: 3%; }
+  .tagline-img-5 { width: 16vw; top: 3%; left: 50%; margin-left: -8vw; }
+  .tagline-img-3 { width: 26vw; bottom: -4%; left: 3%; }
+  .tagline-img-8 { width: 26vw; bottom: 10%; right: 3%; }
+}
+
+@media (max-width: 600px) {
+  .tagline { min-height: 100vh; padding: 10vh 5vw; }
+  .tagline-inner { max-width: 480px; padding: 0 0.5rem; }
+  .tagline-heading {
+    font-size: clamp(1.35rem, 5.4vw, 2rem);
+    line-height: 1.25;
+  }
+  .tagline-img-1 { width: 30vw; top: 7%; left: 3%; }
+  .tagline-img-2 { width: 30vw; top: 2%; right: 3%; }
+  .tagline-img-3 { width: 32vw; bottom: -5%; left: 3%; }
+  .tagline-img-8 { width: 32vw; bottom: 9%; right: 3%; }
+  /* Drop the centre tile on narrow viewports — not enough horizontal
+     room between the two corner tiles. */
+  .tagline-img-5 { display: none; }
+}
+
+@media (max-width: 420px) {
+  .tagline { min-height: 90vh; padding: 9vh 5vw; }
+  .tagline-inner { padding: 0 0.25rem; }
+  .tagline-heading { font-size: clamp(1.15rem, 5.2vw, 1.6rem); line-height: 1.3; }
+  .tagline-img-1 { width: 34vw; top: 6%; }
+  .tagline-img-2 { width: 34vw; top: 2%; }
+  .tagline-img-3 { width: 36vw; bottom: -6%; }
+  .tagline-img-8 { width: 36vw; }
+}

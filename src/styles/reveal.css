@@ -1,0 +1,181 @@
+.reveal-hero,
+.reveal-img-holder {
+  width: 100vw;
+  height: 100svh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.reveal-hero {
+  flex-direction: column;
+  padding: 2em;
+  overflow: hidden;
+}
+
+.reveal-header-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 0.25em;
+}
+
+.reveal-header h1 {
+  font-size: clamp(4rem, 18vw, 16rem);
+  line-height: 0.9;
+  margin: 0;
+  letter-spacing: 0em;
+  text-align: center;
+}
+
+.reveal-header {
+  position: relative;
+}
+
+.reveal-header-1 {
+  align-self: flex-start;
+  z-index: 1;
+}
+
+.reveal-header-2 {
+  align-self: flex-end;
+  z-index: 10;
+}
+
+.reveal-hero-footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 1em;
+  gap: 2em;
+}
+
+.reveal-hero-footer .mn {
+  font-size: 0.9rem;
+  letter-spacing: 0.11em;
+  opacity: 0.7;
+}
+
+.reveal-img-holder {
+  padding: 0;
+}
+
+.reveal-img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-110%) scale(1) rotate(-15deg);
+  will-change: transform;
+}
+
+/* The mark sits at ~70% of the holder so it doesn't dominate the
+   "Circle is a digital marketing agency." copy that slides in next
+   to it during the pinned animation. */
+.reveal-img img {
+  width: 70%;
+  height: 70%;
+  max-width: 70%;
+  max-height: 70%;
+  object-fit: contain;
+}
+
+@media (max-width: 900px) {
+  .reveal-hero { padding: 1rem; }
+  .reveal-header h1 { font-size: clamp(4.2rem, 24vw, 9rem); }
+  .reveal-header-1 { transform: translateY(-14rem); }
+  .reveal-hero-footer { gap: 1rem; padding-top: 0.75rem; flex-wrap: wrap; }
+  .reveal-hero-footer .mn { font-size: 0.78rem; letter-spacing: 0.08em; }
+}
+
+@media (max-width: 480px) {
+  .reveal-hero { padding: 0.75rem; }
+  .reveal-header h1 { font-size: clamp(3.4rem, 26vw, 7rem); }
+  .reveal-header-wrapper { gap: 0.15em; }
+  .reveal-header-1 { transform: translateY(-10rem); }
+  .reveal-hero-footer { gap: 0.75rem; padding-top: 0.5rem; }
+  .reveal-hero-footer .mn { font-size: 0.7rem; letter-spacing: 0.07em; }
+}
+
+/* "Keep scrolling" hint — appears at the bottom of the pinned holder
+   section so users realise they need to keep scrolling vertically for
+   the horizontal stats/about animation to play. The pin timeline
+   fades opacity to 0 the moment scroll begins (see Reveal.jsx). */
+.reveal-scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.25rem, 4vh, 2.5rem);
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  pointer-events: none;
+  font-family: var(--font-body);
+  font-size: 8px;
+  letter-spacing: 0.11em;
+  color: var(--text-mute);
+  opacity: 0.55;
+  animation: reveal-hint-bob 1.6s ease-in-out infinite;
+}
+
+/* The label is a child <span>; globals.css sets `span { font-size: 0.9rem }`
+   which overrides the parent's font-size. Force the label to use its
+   parent's size with explicit pixel values + !important. */
+.reveal-scroll-hint-label {
+  font-size: 8px !important;
+  letter-spacing: inherit !important;
+  line-height: 1.2 !important;
+  color: inherit !important;
+  text-transform: inherit !important;
+}
+
+.reveal-scroll-hint-arrow {
+  width: 1px;
+  height: 12px;
+  background: linear-gradient(to bottom, transparent, var(--text-dim) 70%);
+  position: relative;
+}
+
+.reveal-scroll-hint-arrow::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 5px;
+  height: 5px;
+  border-right: 1px solid var(--text-dim);
+  border-bottom: 1px solid var(--text-dim);
+  transform: translate(-50%, 2px) rotate(45deg);
+}
+
+@keyframes reveal-hint-bob {
+  0%, 100% { transform: translate(-50%, 0); opacity: 0.55; }
+  50%      { transform: translate(-50%, 5px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-scroll-hint { animation: none; }
+}
+
+@media (max-width: 480px) {
+  .reveal-scroll-hint {
+    font-size: 7px;
+    letter-spacing: 0.09em;
+    gap: 0.15rem;
+  }
+  .reveal-scroll-hint-label {
+    font-size: 7px !important;
+  }
+  .reveal-scroll-hint-arrow { height: 10px; }
+}
+

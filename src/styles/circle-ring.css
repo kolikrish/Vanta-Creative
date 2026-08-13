@@ -1,0 +1,180 @@
+/* Section is 200vh tall:
+   - first 100vh of scroll drives the descent (scale + ty + spin via scrub)
+   - at scroll 100vh GSAP pins .cring-inner with pinSpacing:false (no spacer)
+   - during scroll 100vh → 200vh the ring stays fixed and the footer (next
+     sibling, z-index 2) rises up over it. The .cring-text element lives
+     outside .cring-inner with z-index 5, so it paints over the footer. */
+.cring {
+  position: relative;
+  width: 100vw;
+  min-height: 200vh;
+  background: var(--bg);
+}
+
+.cring-inner {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: visible;
+}
+
+.cring-floaters {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.cring-ring {
+  --ring-rot: 0;
+  --ring-rot-auto: 0;
+  --ring-scale: 1;
+  --ring-y: 0;
+  --ring-y-mult: 1;
+  position: absolute;
+  inset: 0;
+  transform:
+    translate3d(0, calc(var(--ring-y) * var(--ring-y-mult) * 1vh), 0)
+    scale(var(--ring-scale))
+    rotate3d(0, 0, 1, calc((var(--ring-rot) + var(--ring-rot-auto)) * 1deg));
+  transform-origin: 50% 50%;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.cring-floater {
+  --spread: 1;
+  position: absolute;
+  will-change: transform, opacity, filter;
+  translate:
+    calc(var(--tx, 0vmin) * var(--spread) - 50%)
+    calc(var(--ty, 0vmin) * var(--spread) - 50%);
+}
+
+.cring-floater-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  background: #fff;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  transform: rotate3d(0, 0, 1, calc((var(--ring-rot) + var(--ring-rot-auto)) * -1deg));
+  transform-origin: 50% 50%;
+  will-change: transform;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14%;
+}
+
+.cring-brand-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: none;
+  animation: cring-brand-in 0.55s ease both;
+}
+
+@keyframes cring-brand-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Sits absolute within .cring (200vh). Default transform centres it; the
+   onUpdate handler in CircleRing.jsx overrides transform on every scroll
+   tick so it slides down with the ring and rides up over the rising footer.
+   Higher z-index than .footer so it always paints on top. */
+.cring-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - 50vh));
+  transform-origin: 50% 50%;
+  width: max-content;
+  max-width: 90vw;
+  z-index: 5;
+  pointer-events: none;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  letter-spacing: -0.005em;
+  line-height: 1.05;
+  color: var(--text);
+  text-align: center;
+  white-space: nowrap;
+  height: 1em;
+  will-change: transform;
+}
+
+.cring-phase {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% calc(-50% - 0.6vh);
+  white-space: nowrap;
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+.cring-phase.is-active {
+  opacity: 1;
+  filter: blur(0px);
+}
+
+/* Mobile: shrink the circles via scale on the inner badge AND multiply the
+   orbit translate so the ring spreads wider. Two independent levers — the
+   parent transform:scale was coupling both. --ring-y-mult bumps how far
+   the ring drifts down during scroll, mobile-only. */
+@media (max-width: 820px) {
+  /* Shorter section on mobile — 200vh of pinned scroll for one section is
+     too much for a phone, and the long pin compounds with native momentum
+     scroll to make the footer feel "locked" before it releases. */
+  .cring { min-height: 140vh; }
+  .cring-ring { --ring-y-mult: 1.28; }
+  .cring-floater {
+    translate:
+      calc(var(--tx, 0vmin) * 1.3 - 50%)
+      calc(var(--ty, 0vmin) * 1.3 - 50%);
+  }
+  .cring-floater-inner {
+    scale: 0.6;
+  }
+  /* CSS default has to match the JS scrub start frame on mobile
+     (TEXT_START_VH = -20). top:50% of the 140vh section is 70vh from
+     section top; the -20vh translate puts the text at 50vh from viewport
+     top — i.e. exactly the ring's centre.
+     z-index 1 (below footer's z-index 2) so the text passes BEHIND the
+     footer as the footer rises into view. */
+  .cring-text {
+    font-size: clamp(1.8rem, 8vw, 3.4rem);
+    white-space: normal;
+    text-wrap: balance;
+    line-height: 1.1;
+    transform: translate(-50%, calc(-50% - 20vh));
+    z-index: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .cring-ring { --ring-y-mult: 1.36; }
+  .cring-floater {
+    translate:
+      calc(var(--tx, 0vmin) * 1.38 - 50%)
+      calc(var(--ty, 0vmin) * 1.38 - 50%);
+  }
+  .cring-floater-inner {
+    scale: 0.5;
+  }
+  .cring-text {
+    font-size: clamp(1.3rem, 8.5vw, 2.4rem);
+    max-width: 88vw;
+    line-height: 1.12;
+  }
+}
+

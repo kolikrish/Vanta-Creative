@@ -1,0 +1,269 @@
+.carousel {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.project {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+}
+
+
+.project-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 10vh 7vw;
+  background: radial-gradient(
+      120% 90% at 85% 10%,
+      rgba(201, 255, 61, 0.12) 0%,
+      transparent 50%
+    ),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
+  color: var(--text);
+  overflow: hidden;
+}
+
+/* Per-project accent tints so each slide reads distinct during the stack reveal */
+#project-01 .project-inner {
+  background: radial-gradient(
+      120% 90% at 82% 14%,
+      rgba(var(--c-yellow-rgb), 0.18) 0%,
+      transparent 55%
+    ),
+    linear-gradient(180deg, #110d05 0%, var(--bg) 100%);
+}
+#project-02 .project-inner {
+  background: radial-gradient(
+      120% 90% at 15% 18%,
+      rgba(var(--c-blue-rgb), 0.22) 0%,
+      transparent 55%
+    ),
+    linear-gradient(180deg, #0a0c14 0%, var(--bg) 100%);
+}
+#project-03 .project-inner {
+  background: radial-gradient(
+      120% 90% at 80% 80%,
+      rgba(var(--c-red-rgb), 0.18) 0%,
+      transparent 55%
+    ),
+    linear-gradient(180deg, #120a09 0%, var(--bg) 100%);
+}
+#project-04 .project-inner {
+  background: radial-gradient(
+      120% 90% at 18% 85%,
+      rgba(var(--c-mint-rgb), 0.18) 0%,
+      transparent 55%
+    ),
+    linear-gradient(180deg, #08120c 0%, var(--bg) 100%);
+}
+
+.project-header {
+  max-width: 30ch;
+}
+
+.project-index {
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.21em;
+}
+
+.project-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: -0.005em;
+  font-weight: 700;
+  font-style: normal;
+  margin: 0;
+  color: var(--text);
+}
+
+.project-tagline {
+  margin: 1.25rem 0 0;
+  font-size: clamp(1.1rem, 1.5vw, 1.5rem);
+  line-height: 1.35;
+  max-width: 36ch;
+  color: var(--text);
+  opacity: 0.82;
+  text-transform: none;
+  letter-spacing: 0.07em;
+  font-weight: 400;
+}
+
+.project-body {
+  position: absolute;
+  right: 7vw;
+  /* Was top: 22vh. At 150%+ zoom, vh shrinks but the rem-sized stat
+     numbers below grow taller, pushing the body down into the slide's
+     footer area. Clamp with a rem floor + rem cap keeps the body
+     anchored in roughly the same visual band at any zoom level. */
+  top: clamp(8rem, 22vh, 16rem);
+  /* Was max-width: 36vw. At high zoom 36vw shrinks below what the
+     stat numbers need, forcing them to wrap into the left-side
+     project title. Floor at 22rem (~352px) so the body always has
+     room for its content without crowding the heading. */
+  max-width: clamp(22rem, 36vw, 30rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.project-stats {
+  display: flex;
+  gap: 3rem;
+}
+
+.project-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-end;
+}
+
+.project-stat-v {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+}
+
+.project-stat-k {
+  font-size: 0.72rem;
+  letter-spacing: 0.21em;
+  color: var(--accent);
+  opacity: 0.85;
+  font-weight: 500;
+}
+
+.project-services,
+.project-clients {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: right;
+}
+
+.project-services li,
+.project-clients li {
+  font-size: clamp(1rem, 1.4vw, 1.35rem);
+  line-height: 1.25;
+  letter-spacing: 0em;
+  text-transform: none;
+  color: var(--text);
+  opacity: 0.88;
+  font-weight: 500;
+}
+
+.project-clients li {
+  font-family: var(--font-body);
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+.project-info {
+  position: absolute;
+  bottom: 3rem;
+  left: 7vw;
+  right: 7vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+}
+
+.project-tags {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.project-tags p {
+  color: var(--text-dim);
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  letter-spacing: 0.13em;
+}
+
+.project-url span {
+  color: var(--accent);
+  padding: 0.7rem 1.15rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+}
+
+@media (max-width: 900px) {
+  /* Pinned slide animation still runs — every slide is 100vh tall and
+     content scales down to fit so nothing is clipped during the reveal. */
+  .carousel { height: 100vh; height: 100svh; }
+  .project-inner {
+    padding: 5vh 1.25rem 4vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow: hidden;
+  }
+  .project-header { max-width: 100%; }
+  .project-header h2 { font-size: clamp(2.4rem, 10vw, 4rem); }
+  .project-tagline { margin-top: 0.75rem; font-size: 1.08rem; max-width: 30ch; }
+  .project-body {
+    position: static;
+    align-items: flex-start;
+    text-align: left;
+    max-width: 100%;
+    margin-top: 0;
+    gap: 1.25rem;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .project-services,
+  .project-clients { text-align: left; }
+  .project-services li,
+  .project-clients li { font-size: 1.15rem; }
+  .project-stat { align-items: flex-start; }
+  .project-stats { gap: 1.25rem; flex-wrap: wrap; }
+  .project-stat-v { font-size: clamp(2.2rem, 10vw, 3.6rem); }
+  .project-stat-k { font-size: 0.62rem; letter-spacing: 0.21em; }
+  .project-info {
+    position: static;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+    margin-top: auto;
+  }
+  .project-tags p { font-size: 0.66rem; padding: 0.3rem 0.75rem; letter-spacing: 0.11em; }
+  .project-url span { padding: 0.55rem 0.95rem; font-size: 0.7rem; letter-spacing: 0.13em; }
+}
+
+@media (max-width: 480px) {
+  .project-inner { padding: 4vh 1rem 3vh; gap: 1.1rem; }
+  .project-header h2 { font-size: clamp(2rem, 11vw, 3rem); line-height: 0.98; }
+  .project-tagline { font-size: 1.15rem; line-height: 1.4; }
+  .project-stat-v { font-size: clamp(1.9rem, 11vw, 3rem); }
+  .project-stats { gap: 0.85rem; }
+  .project-services li,
+  .project-clients li { font-size: 1.02rem; }
+  .project-tags { gap: 0.4rem; }
+}

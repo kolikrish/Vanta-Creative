@@ -1,0 +1,776 @@
+.reveal-img-holder {
+  overflow: visible;
+  z-index: 5;
+}
+
+.reveal-img {
+  z-index: 3;
+}
+
+.reveal-about-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.reveal-about {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: max-content;
+  display: flex;
+  align-items: stretch;
+  color: var(--text);
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.about-panel {
+  flex: 0 0 100vw;
+  height: 100%;
+  padding: 8vh 7vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  position: relative;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.about-panel:last-child {
+  border-right: none;
+}
+
+.about-panel-head {
+  position: absolute;
+  top: 5vh;
+  left: 7vw;
+  right: 7vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.about-stamp {
+  font-size: 0.8rem;
+  letter-spacing: 0.21em;
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ——— Panel 1: Intro (scattered cinematic layout) ——— */
+
+.about-panel-intro {
+  flex: 0 0 85vw;
+  padding: 0;
+  justify-content: flex-start;
+  overflow: visible;
+}
+
+/* Left-to-right colour fill on the heading. A fixed multi-stop gradient
+   carries the palette; --splash drives only the gradient layer's width via
+   background-size. The text-coloured background sits beneath, so the rest
+   of the heading reads in the default colour until the wipe reaches it.
+   No calc() inside gradient stops — works on iOS Safari. */
+.about-title-splash {
+  --splash: 0%;
+  background-color: var(--text);
+  background-image: linear-gradient(
+    90deg,
+    var(--c-blue)   0%,
+    var(--c-pink)   25%,
+    var(--c-yellow) 50%,
+    var(--c-mint)   75%,
+    var(--c-red)    100%
+  );
+  background-size: var(--splash) 100%;
+  background-position: left center;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  will-change: background-size;
+}
+
+.about-panel-intro .about-panel-head {
+  top: 5vh;
+  left: 4vw;
+  right: auto;
+  width: calc(85vw - 8vw);
+  z-index: 4;
+}
+
+.about-title {
+  position: absolute;
+  /* Title top anchored from the top of the panel. Body is anchored
+     from the bottom. At high browser zoom the CSS viewport height
+     shrinks but rem-based fonts don't, so the gap between the two
+     can collapse. Caps below (font-size + body bottom + line-height)
+     keep ~200px of clearance at 150% zoom and avoid the overlap. */
+  top: clamp(7rem, 16vh, 20rem);
+  left: 4vw;
+  /* Widened from min(60vw, 16ch) so "marketing agency." fits on a
+     single line at zoom levels where 60vw became too narrow and
+     forced the title to wrap to 3 lines (which pushed its bottom
+     edge into the body paragraph). */
+  max-width: min(72vw, 18ch);
+  /* Capped tighter so the title can't grow tall enough to swallow
+     the body's headroom at high zoom. Hero scale is preserved at
+     normal viewports via the 5rem max. */
+  font-size: clamp(2.4rem, 5.2vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: 0em;
+  margin: 0;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: none;
+  z-index: 3;
+}
+
+.about-body {
+  position: absolute;
+  /* Was clamp(7rem, 14vh, 18rem). Dropped the floor to 3.5rem so
+     the body sits further from the title at high zoom — combined
+     with the title's smaller cap, this guarantees clearance at
+     150% zoom without changing the natural look at 100%. */
+  bottom: clamp(3.5rem, 10vh, 12rem);
+  left: 4vw;
+  max-width: 42ch;
+  /* Capped from 1.65rem max — body was reading too large at desktop
+     widths and growing the paragraph's total height past what the
+     panel could hold at zoomed viewports. */
+  font-size: clamp(1.15rem, 1.35vw, 1.4rem);
+  line-height: 1.5;
+  /* Bumped from 0.82 — at the previous value, the dim greys lost
+     definition on phones during the horizontal pan. */
+  opacity: 0.95;
+  margin: 0;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0.015em;
+  color: var(--text);
+  z-index: 3;
+}
+
+.about-stat {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 3;
+}
+
+.about-stat-k {
+  font-size: 0.72rem;
+  letter-spacing: 0.23em;
+  opacity: 0.55;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.about-stat-v {
+  font-size: clamp(3rem, 6.5vw, 6.5rem);
+  letter-spacing: -0.005em;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: none;
+  color: var(--text);
+}
+
+.about-stat-years   { top: 10vh;    left: 68vw;  }
+.about-stat-clients { bottom: 16vh; left: 92vw;  }
+.about-stat-focus   { top: 12vh;    left: 118vw; }
+
+@media (max-width: 900px) {
+  .about-panel-intro { flex-basis: 100vw; }
+  .about-title {
+    top: 14vh;
+    left: 6vw;
+    max-width: 90vw;
+    /* Bumped from the desktop fluid clamp (which produced ~50px
+       on a 600px phone). Explicit 12vw–7rem clamp gives the
+       rainbow heading proper hero scale on mobile. */
+    font-size: clamp(3.4rem, 12vw, 7rem);
+    line-height: 0.95;
+  }
+  /* Sits in the lower-right of the panel, right-aligned, opposite
+     the rainbow heading. `bottom: 22vh` keeps the para clearly inside
+     the visible viewport (was 8vh which was pinned too low). */
+  .about-body  {
+    top: auto;
+    bottom: 22vh;
+    left: auto;
+    right: 6vw;
+    max-width: 34ch;
+    text-align: right;
+    /* Bumped to 1.4rem on mobile — paragraph reads as a properly
+       weighted supporting note, not a caption. */
+    font-size: 1.4rem;
+    line-height: 1.5;
+  }
+}
+
+/* ====================================================================
+   HIGH-ZOOM / SHORT-VIEWPORT EMERGENCY FLOW LAYOUT
+   --------------------------------------------------------------------
+   At browser zoom ≥ 150% the CSS viewport height shrinks enough that
+   the absolute-positioned title (top-anchored) and body (bottom-
+   anchored) physically cannot fit in the panel with their natural
+   content heights. Once the viewport drops below 760px tall — which
+   happens at ~140%+ zoom on a 1080-tall monitor and at every zoom
+   level on shorter laptops — we abandon the cinematic absolute layout
+   and stack the title + body in natural flex-column flow. Decorative
+   floating stats are hidden at this zoom level (they're behind the
+   logo anyway and have no informational role).
+   ==================================================================== */
+@media (max-height: 760px) {
+  .about-panel-intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(1.25rem, 3vh, 2.5rem);
+    padding: clamp(2rem, 6vh, 5rem) 6vw;
+    /* Override the desktop flex-start so vertical centring takes effect. */
+    justify-content: center;
+  }
+  .about-panel-intro .about-title,
+  .about-panel-intro .about-body {
+    position: static;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    margin: 0;
+    text-align: left;
+  }
+  .about-panel-intro .about-title {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    max-width: min(90%, 18ch);
+    line-height: 0.95;
+  }
+  .about-panel-intro .about-body {
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+    max-width: min(90%, 48ch);
+    line-height: 1.5;
+  }
+  /* Hide the scattered stats at high zoom — they're decorative and
+     overlap the now-stacked title/body if left in place. */
+  .about-panel-intro .about-stat { display: none; }
+}
+
+/* ——— Stats scattered behind the dropping logo ——— */
+
+.reveal-stats-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.reveal-stats-kicker {
+  position: absolute;
+  top: 8vh;
+  left: 6vw;
+  font-size: 0.8rem;
+  letter-spacing: 0.32em;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.reveal-stat {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: clamp(14rem, 20vw, 18rem);
+  will-change: transform;
+}
+
+.reveal-stat-v {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 8vw, 8rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  font-style: normal;
+  text-transform: none;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.05em;
+}
+
+.reveal-stat-v sup {
+  font-size: 0.45em;
+  line-height: 1;
+  margin-top: 0.15em;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.reveal-stat-num {
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-transform: none;
+}
+
+.reveal-stat-k {
+  font-size: 0.95rem;
+  letter-spacing: 0.21em;
+  color: var(--text-dim);
+  font-weight: 500;
+  line-height: 1.35;
+  max-width: 22ch;
+}
+
+/* Random scatter — irregular positions, no symmetry. clamp() on
+   every vertical offset adds a rem floor so the four stat blocks
+   can't climb into each other at high browser zoom. */
+.reveal-stat-1 { top:    clamp(12rem, 28vh, 36rem); left: 7vw;  }
+.reveal-stat-2 { top:    clamp(10rem, 24vh, 32rem); right: 9vw; }
+.reveal-stat-3 { bottom: clamp(7rem,  14vh, 20rem); left: 14vw; }
+.reveal-stat-4 { bottom: clamp(5rem,  10vh, 16rem); right: 6vw; }
+
+.reveal-stat-1 .reveal-stat-v { color: var(--c-blue); }
+.reveal-stat-1 .reveal-stat-v sup { color: var(--c-blue); }
+.reveal-stat-2 .reveal-stat-v { color: var(--c-pink); }
+.reveal-stat-2 .reveal-stat-v sup { color: var(--c-pink); }
+.reveal-stat-3 .reveal-stat-v { color: var(--c-yellow); }
+.reveal-stat-3 .reveal-stat-v sup { color: var(--c-yellow); }
+.reveal-stat-4 .reveal-stat-v { color: var(--c-mint); }
+.reveal-stat-4 .reveal-stat-v sup { color: var(--c-mint); }
+
+@media (max-width: 900px) {
+  /* "Growing with You" kicker removed across all mobile widths per
+     request — duplicated the stats heading on phones. */
+  .reveal-stats-kicker { display: none; }
+  .reveal-stat { width: 42vw; }
+  .reveal-stat-v { font-size: clamp(3.2rem, 14vw, 5.5rem); }
+  .reveal-stat-k { font-size: 1.02rem; }
+  .reveal-stat-1 { top: 22vh; left: 5vw; }
+  .reveal-stat-2 {
+    top: 22.5vh;
+    right: 4vw;
+    align-items: flex-end;
+    text-align: right;
+  }
+  .reveal-stat-3 { bottom: 12vh; left: 5vw; }
+  .reveal-stat-4 {
+    bottom: 12vh;
+    right: 4vw;
+    align-items: flex-end;
+    text-align: right;
+  }
+  /* Number block also right-aligned so the digits line up with the
+     end of the label text on the same vertical axis. */
+  .reveal-stat-2 .reveal-stat-v,
+  .reveal-stat-4 .reveal-stat-v {
+    justify-content: flex-end;
+  }
+}
+
+/* ——— Panel 2: Process (cinematic floating cards) ——— */
+
+.about-panel-process {
+  flex: 0 0 115vw;
+  padding: 0;
+  justify-content: flex-start;
+  overflow: visible;
+}
+
+.about-panel-process .about-panel-head {
+  top: 5vh;
+  left: 4vw;
+  right: auto;
+  width: calc(115vw - 8vw);
+  z-index: 4;
+}
+
+.process-ghost {
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.015em;
+  line-height: 0.85;
+  color: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.process-ghost-a {
+  font-size: clamp(14rem, 28vw, 28rem);
+  top: 26vh;
+  left: 18vw;
+}
+
+.process-float {
+  position: absolute;
+  width: clamp(22rem, 26vw, 30rem);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  will-change: transform;
+  z-index: 3;
+}
+
+.process-float-num {
+  font-size: 0.75rem;
+  letter-spacing: 0.27em;
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.process-float-img {
+  /* Was 100% of the card width — the wavy icon was as wide as the
+     title underneath which looked image-heavy. 60% (with a max
+     cap) shrinks the icon to roughly two-thirds of the card width
+     so the title + body copy carry more visual weight. */
+  width: 60%;
+  max-width: 14rem;
+}
+
+.process-float-img .wavy-image {
+  width: 100%;
+  display: block;
+}
+
+.process-float-img .wavy-image canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.process-float figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.3rem;
+}
+
+.process-float figcaption h3 {
+  /* Was clamp(1.4rem, 1.9vw, 2.1rem) — felt small next to the big
+     ghost "Process" word behind. Bumped one step. */
+  font-size: clamp(1.7rem, 2.4vw, 2.7rem);
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.05;
+  letter-spacing: 0em;
+  margin: 0;
+  text-transform: none;
+}
+
+.process-float figcaption p {
+  /* Bumped from clamp(0.95rem, 1.05vw, 1.1rem). The body copy under
+     each step (Audit / Implement / Track / Adapt) reads as the
+     supporting note, so it sizes up in lockstep with the title. */
+  font-size: clamp(1.1rem, 1.25vw, 1.3rem);
+  line-height: 1.5;
+  /* Was 0.72 — too dim to read against the dark backdrop while the panel
+     is mid-scroll on phones; lift to a near-text contrast so each step
+     reads clearly as the user pans across the horizontal section. */
+  opacity: 0.92;
+  margin: 0;
+  max-width: 36ch;
+  text-transform: none;
+  letter-spacing: 0.08em;
+  font-weight: 400;
+  color: var(--text);
+}
+
+/* Scattered placements — irregular positions, no tilt.
+   High cards anchor from top, low cards anchor from bottom. All
+   vertical offsets use clamp(rem, vh, rem) so the rem floor keeps
+   neighbours apart at high browser zoom; the vh middle keeps the
+   "scattered" feel at normal zoom; the rem cap stops cards drifting
+   too far on tall monitors. */
+/* All four cards lifted ~6vh on this pass — was sitting too low in
+   the pinned panel, now floats higher so the "Process" ghost word
+   reads behind them and the section has clear bottom margin. */
+.process-float-1 {
+  top: clamp(2rem, 4vh, 8rem);
+  left: -2vw;
+  width: clamp(20rem, 24vw, 26rem);
+}
+
+/* Drop just the Research icon a touch — the rest of the card
+   (title + body) stays anchored at the top of the float, but the
+   image sits ~4vh lower so it doesn't sit flush against the
+   panel's top edge. */
+.process-float-1 .process-float-img {
+  transform: translateY(4vh);
+}
+
+.process-float-2 {
+  bottom: clamp(10rem, 18vh, 22rem);
+  left: 26vw;
+  width: clamp(20rem, 24vw, 26rem);
+}
+
+.process-float-2 .process-float-img {
+  transform: translateY(8vh);
+}
+
+.process-float-3 {
+  top: clamp(0.5rem, 1vh, 4rem);
+  left: 54vw;
+  width: clamp(20rem, 24vw, 26rem);
+}
+
+.process-float-4 {
+  bottom: clamp(12rem, 22vh, 26rem);
+  left: 82vw;
+  width: clamp(20rem, 24vw, 26rem);
+}
+
+.process-float-1 .process-float-num,
+.process-float-1 figcaption h3 { color: var(--c-blue); }
+.process-float-2 .process-float-num,
+.process-float-2 figcaption h3 { color: var(--c-pink); }
+.process-float-3 .process-float-num,
+.process-float-3 figcaption h3 { color: var(--c-yellow); }
+.process-float-4 .process-float-num,
+.process-float-4 figcaption h3 { color: var(--c-mint); }
+
+@media (max-width: 900px) {
+  .about-panel-process { flex-basis: 230vw; }
+  .process-float { width: 52vw; }
+  /* Lifted each card ~4vh more this pass so they sit higher on the
+     pinned panel and the smaller icons + bigger titles have room. */
+  .process-float-1 { top: 2vh;     left: 5vw;   }
+  .process-float-2 { top: auto; bottom: 18vh; left: 60vw;  }
+  .process-float-3 { top: 1vh;     left: 115vw; }
+  .process-float-4 { top: auto; bottom: 18vh; left: 165vw; }
+  .process-ghost-a { font-size: 44vw; top: 35vh; left: 40vw; }
+}
+
+/* ——— Panel 3: Quote (stacked big lines, wrapper reveal on scroll) ——— */
+
+.about-panel-quote {
+  flex-basis: 90vw;
+  padding: 0;
+  justify-content: flex-start;
+  border-right: none;
+  overflow: visible;
+}
+
+.about-quote-stack {
+  --quote-width: 100%;
+  position: absolute;
+  /* Floor at 6rem so the heading never sits flush against the top
+     edge of the panel at high browser zoom. */
+  top: clamp(6rem, 10vh, 14rem);
+  left: 4vw;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  max-width: 82vw;
+  z-index: 3;
+}
+
+.quote-line-wrap {
+  display: block;
+  line-height: 0.9;
+  padding-bottom: 0.02em;
+}
+
+.quote-line {
+  --fill: 0%;
+  display: inline-block;
+  font-family: var(--font-display);
+  /* Eased back from clamp(4rem, 14vw, 14rem) — that read as huge on
+     a 1440+ monitor. The new desktop cap of 10rem keeps it as a
+     hero line without overwhelming the panel. Mobile still scales
+     up via the 14vw factor inside the larger override below. */
+  font-size: clamp(3.5rem, 10vw, 10rem);
+  font-weight: 700;
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  line-height: 0.9;
+  will-change: background-position;
+
+  background-image: linear-gradient(
+    90deg,
+    #eaeae6 0%,
+    #eaeae6 var(--fill),
+    #2e2e33 calc(var(--fill) + 0.5%),
+    #2e2e33 100%
+  );
+  background-size: var(--quote-width, 100%) 100%;
+  background-position: left center;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.quote-sub-wrap {
+  position: absolute;
+  /* Floor at 6rem keeps the cycler comfortably above the panel's
+     bottom edge at any zoom level. */
+  bottom: clamp(6rem, 12vh, 16rem);
+  /* Aligned to the right side of the panel — was left:4vw which
+     stacked the cycling line directly under the rainbow heading.
+     Now it sits on the right so the panel reads as heading-left +
+     cycler-right, balanced across the panel width. */
+  right: 4vw;
+  left: auto;
+  overflow: hidden;
+  max-width: 52ch;
+  text-align: right;
+  z-index: 3;
+}
+
+.about-quote-sub {
+  display: block;
+  /* Bumped from clamp(1rem, 1.25vw, 1.25rem). The cycling caption
+     below the rainbow heading now reads as a substantial line at
+     desktop too, not a small footer. */
+  font-size: clamp(1.4rem, 1.8vw, 1.8rem);
+  opacity: 0.85;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: 0.07em;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 1.45;
+  color: var(--text);
+  animation: quote-sub-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes quote-sub-rise {
+  from { transform: translateY(110%); }
+  to   { transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  .about-panel-quote { flex-basis: 100vw; }
+  .about-quote-stack { top: 14vh; left: 6vw; max-width: 92vw; }
+  /* Bumped the rainbow quote lines on mobile — was 18vw, now 22vw
+     with a higher cap so "Expand Your Radius with Circle" feels
+     properly hero-scale on a phone. */
+  .quote-line { font-size: clamp(3.6rem, 22vw, 8rem); }
+  /* Pushed the rotating caption further DOWN on the last horizontal
+     slide — `bottom: 30vh` was sitting too close to the heading and
+     felt crowded; `bottom: 10vh` parks it near the bottom of the
+     slide so the rotating phrase has room to breathe under "Expand
+     Your Radius with Circle". */
+  .quote-sub-wrap { bottom: 10vh; right: 6vw; left: auto; }
+  /* Bumped from 1.5rem → 1.75rem so the caption holds its weight
+     under the now-bigger rainbow heading on mobile. */
+  .about-quote-sub { font-size: 1.75rem; line-height: 1.4; }
+}
+
+/* ——— Panel 4: Banner ——— */
+
+.about-panel-banner {
+  flex-direction: row;
+  gap: 3rem;
+  align-items: center;
+}
+
+.about-banner-stack {
+  flex: 1 1 60%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  height: 60vh;
+}
+
+.about-banner-stack img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1rem;
+  background: var(--bg-2);
+}
+
+.about-banner-caption {
+  flex: 1 1 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 30rem;
+}
+
+.about-banner-caption h3 {
+  font-size: clamp(1.75rem, 3vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: 0em;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .about-panel-banner { flex-direction: column; gap: 1.5rem; padding: 6vh 5vw; }
+  .about-banner-stack { grid-template-columns: 1fr 1fr; height: 40vh; }
+  .about-banner-caption { max-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .about-stat-years   { top: 8vh;    left: 60vw; }
+  .about-stat-clients { bottom: 22vh; left: 78vw; }
+  .about-stat-focus   { top: 10vh;    left: 100vw; }
+  .about-stat-v { font-size: clamp(2.4rem, 12vw, 4rem); }
+  .about-stat-k { font-size: 0.62rem; letter-spacing: 0.21em; }
+  .about-banner-stack { height: 32vh; }
+
+  /* Bumped from clamp(2.4rem, 12vw, 4rem) — was capping at ~64px
+     on small phones, now scales bigger via 14vw and a 5rem cap so
+     the heading still feels hero-scale below 480px. */
+  .about-title { top: 12vh; font-size: clamp(3rem, 14vw, 5rem); }
+  .about-body {
+    top: auto;
+    bottom: 18vh;
+    left: auto;
+    right: 6vw;
+    /* Bumped to 1.3rem on very small phones so the paragraph still
+       reads at supporting-note weight, matching the larger 1.4rem
+       at the 900px breakpoint. */
+    font-size: 1.3rem;
+    max-width: 32ch;
+    line-height: 1.5;
+    text-align: right;
+  }
+  .about-stamp { font-size: 0.7rem; letter-spacing: 0.17em; }
+
+  .reveal-stat { width: 46vw; gap: 0.5rem; }
+  .reveal-stat-v { font-size: clamp(2.6rem, 14vw, 4.2rem); }
+  .reveal-stat-k { font-size: 0.74rem; letter-spacing: 0.17em; max-width: 18ch; }
+  /* "Growing with You" kicker removed from mobile per request — it
+     duplicated the stats heading and crowded the small-phone view. */
+  .reveal-stats-kicker { display: none; }
+
+  .process-float figcaption h3 { font-size: 1.5rem; }
+  .process-float figcaption p {
+    font-size: 1.15rem;
+    line-height: 1.45;
+    opacity: 0.95;
+  }
+  .process-float-num { font-size: 0.66rem; letter-spacing: 0.23em; }
+
+  /* Slightly larger heading and caption on very small phones too. */
+  .quote-line { font-size: clamp(2.8rem, 18vw, 5.5rem); }
+  .about-quote-sub { font-size: 1.45rem; line-height: 1.4; }
+
+  .about-banner-caption h3 { font-size: clamp(1.4rem, 7vw, 2rem); }
+  .about-banner-caption { gap: 1rem; }
+}
