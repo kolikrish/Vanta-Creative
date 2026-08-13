@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 
 const PHONE = "+918889977666";
 const PHONE_DISPLAY = "+91 88899 77666";
@@ -64,9 +63,9 @@ export default function Footer() {
             <p className="f-col-label">Navigate</p>
             <nav className="f-nav">
               {navLinks.map((n) => (
-                <Link key={n.to} to={n.to} className="f-nav-link">
+                <a key={n.to} href={n.to} className="f-nav-link">
                   <span className="f-nav-num">{n.num}</span> {n.label}
-                </Link>
+                </a>
               ))}
             </nav>
           </div>

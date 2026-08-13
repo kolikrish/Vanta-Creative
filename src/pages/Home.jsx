@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Link } from "react-router-dom";
+
 import Hero from "../components/sections/Hero.jsx";
 import Process from "../components/sections/Process.jsx";
 import Reveal from "../components/sections/Reveal.jsx";
@@ -32,9 +32,9 @@ export default function Home() {
         brands={homeClients}
         eyebrow="[Few brands we have worked with]"
         cta={
-          <Link to="/brands" className="brands-head-cta">
+          <a href="/brands" className="brands-head-cta">
             See all brands <span aria-hidden="true">↗</span>
-          </Link>
+          </a>
         }
       />
       <Suspense fallback={null}>
@@ -44,3 +44,4 @@ export default function Home() {
     </>
   );
 }
+

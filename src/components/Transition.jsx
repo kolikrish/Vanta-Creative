@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
-export default function Transition({ pathname }) {
+export default function Transition() {
   const ref = useRef(null);
   const first = useRef(true);
   const tlRef = useRef(null);
@@ -24,10 +24,8 @@ export default function Transition({ pathname }) {
       // on top of it makes the home reload feel doubled-up. Page-to-page
       // transitions (the timeline below) still run normally on every
       // route, including / .
-      if (pathname === "/") {
-        gsap.set(blocks, { scaleY: 0 });
-        return;
-      }
+      gsap.set(blocks, { scaleY: 0 });
+      return;
       // Initial page-load reveal: longer duration + softer ease so the
       // blocks lift away gradually instead of snapping. The smaller
       // stagger keeps the rows feeling unified rather than zip-like.
@@ -61,7 +59,7 @@ export default function Transition({ pathname }) {
       stagger: 0.018,
       ease: "power2.out",
     });
-  }, [pathname]);
+  }, []);
 
   return (
     <div className="transition" ref={ref}>

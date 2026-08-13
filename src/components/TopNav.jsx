@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+
 import gsap from "gsap";
 import { navLinks } from "../data/content.js";
 
@@ -8,13 +8,12 @@ export default function TopNav() {
   const innerRef = useRef(null);
   const [time, setTime] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
-  const { pathname } = useLocation();
-  const isActive = (to) =>
-    to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(to + "/");
+  const pathname = "/";
+  const isActive = (to) => to === "/";
 
   useEffect(() => {
     setMenuOpen(false);
-  }, [pathname]);
+  }, []);
 
   useEffect(() => {
     if (!menuOpen) return;

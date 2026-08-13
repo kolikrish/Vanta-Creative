@@ -1,24 +1,10 @@
-import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
-
-// On iOS Safari and Android Chrome, the address bar grows/shrinks during
-// scroll, which triggers a ScrollTrigger.refresh() and causes pinned/scrubbed
-// sections to recalculate mid-scroll — the visible result is jitter and
-// "bouncing". Telling ScrollTrigger to ignore those resizes is the single
-// biggest mobile-stability win.
 ScrollTrigger.config({ ignoreMobileResize: true });
-
-// On touch devices, normalize the scroll: ScrollTrigger samples the touch
-// input through its own RAF loop and feeds the *exact rendered scroll
-// position* to every pin transform. Without this, pins read Lenis's
-// smoothed/synced position which drifts from the native momentum scroll
-// — that drift is what reads as "bouncing past the footer / horizontal
-// section overshooting" on phones.
 if (
   typeof window !== "undefined" &&
   (window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
@@ -27,13 +13,9 @@ if (
   ScrollTrigger.normalizeScroll(true);
 }
 
-// Detect low-end devices once at module load and tag <html> with classes
-// that the rest of the app (CSS + JS) can use to disable expensive
-// effects. The thresholds are intentionally conservative — we'd rather
-// downgrade visuals on a borderline device than ship jittery scroll on it.
 if (typeof window !== "undefined") {
-  const dm = navigator.deviceMemory ?? 8;       // RAM in GB (fallback: assume OK)
-  const hc = navigator.hardwareConcurrency ?? 8; // logical cores
+  const dm = navigator.deviceMemory ?? 8;       
+  const hc = navigator.hardwareConcurrency ?? 8; 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isLowPerf = reduceMotion || dm < 4 || hc < 4;
   document.documentElement.classList.toggle("is-low-perf", isLowPerf);
@@ -51,15 +33,8 @@ let lenisInstance = null;
 export const getLenis = () => lenisInstance;
 
 export default function App() {
-  const location = useLocation();
   const isFirstRender = useRef(true);
 
-  // Mobile-only safety net: hard-reload sometimes leaves the body / html with
-  // a stale lock (overflow:hidden from a previous mobile-menu open, or a
-  // leftover `lenis-stopped` class from a prior desktop session served from
-  // the same SW cache). On iOS this manifests as "scroll stuck after every
-  // reload". Clear those once on mount, defensively, so native scroll is
-  // guaranteed to work.
   useEffect(() => {
     const isTouch =
       window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
@@ -73,12 +48,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // Touch / mobile: native iOS Safari and Android scroll is hardware-
-    // accelerated and is the single source of scroll truth. Pin transforms
-    // are kept in sync with native momentum via ScrollTrigger.normalizeScroll
-    // (configured at module-load above). Adding Lenis on top would
-    // introduce a second, lagged scroll position and is what was causing
-    // the pins to bounce / overshoot the footer.
     const isTouch =
       window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
       window.innerWidth <= 900;
@@ -157,37 +126,16 @@ export default function App() {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
     if (lenisInstance) {
-      // Hero stops Lenis during its entrance animation. If the user
-      // clicks an in-app <Link> before Hero's unlock() fires (its 6s
-      // safety net hasn't expired yet), Lenis stays stopped and the
-      // NEXT page renders but can't scroll — looks like a blank screen
-      // because content below the fold is unreachable. Force-start
-      // Lenis on every route change so this can't happen.
       lenisInstance.start();
       lenisInstance.scrollTo(0, { immediate: true, force: true });
     }
-    // Same belt-and-suspenders for any leftover body locks (mobile menu
-    // close races, page-loader cleanup races, etc.) — clear them so
-    // the new page is always interactive on first paint.
     document.body.classList.remove("chrome-hidden");
     document.body.style.overflow = "";
     document.body.style.position = "";
     document.documentElement.style.overflow = "";
-  }, [location.pathname]);
+  }, []);
 
   useEffect(() => {
-    // After paint: let Lenis recompute bounds for the new page, then
-    // refresh ScrollTriggers so any newly-mounted ones evaluate against
-    // scroll=0.
-    //
-    // Refresh runs in TWO passes (rAF + 60ms timeout). On first SPA
-    // navigation to a route with sticky / pinned children (/brands had
-    // the Clients honeycomb's sticky stage; old pages had pin spacers)
-    // the single-rAF refresh could fire before the new page's children
-    // had committed their useEffects, leaving the page rendered but
-    // invisible until the next user-driven scroll forced a refresh —
-    // the "blank until reload" symptom the user hit. The deferred
-    // second refresh catches that case.
     const raf = requestAnimationFrame(() => {
       if (lenisInstance) {
         lenisInstance.resize();
@@ -207,18 +155,16 @@ export default function App() {
       cancelAnimationFrame(raf);
       clearTimeout(t);
     };
-  }, [location.pathname]);
+  }, []);
 
   return (
     <>
       <PageLoader />
-      <Transition pathname={location.pathname} />
+      <Transition />
       <CursorFX />
       <div className="app">
         <TopNav />
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
+        <Home />
       </div>
     </>
   );

@@ -14,7 +14,7 @@ export default defineConfig({
         manualChunks: {
           three: ["three"],
           gsap: ["gsap"],
-          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          "react-vendor": ["react", "react-dom"],
         },
       },
     },
