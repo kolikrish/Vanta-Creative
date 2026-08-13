@@ -1,101 +1,51 @@
-
-const PHONE = "+918889977666";
-const PHONE_DISPLAY = "+91 88899 77666";
-const WHATSAPP = `https://wa.me/${PHONE.replace(/\D/g, "")}?text=${encodeURIComponent(
-  "Hi Circle, I'd like to talk about a project."
-)}`;
-
-const socials = [
-  {
-    k: "Instagram",
-    href: "https://instagram.com/marketingbycircle",
-    color: "var(--c-pink)",
-  },
-  {
-    k: "Facebook",
-    href: "https://facebook.com/marketingbycircle",
-    color: "var(--c-blue)",
-  },
-  {
-    k: "LinkedIn",
-    href: "https://linkedin.com/company/marketingbycircle",
-    color: "var(--c-mint)",
-  },
-  {
-    k: "WhatsApp",
-    href: WHATSAPP,
-    color: "var(--c-yellow)",
-  },
-];
-
-const navLinks = [
-  { to: "/",         label: "Index",    num: "01" },
-  { to: "/services", label: "Services", num: "02" },
-  { to: "/work",     label: "Work",     num: "03" },
-  { to: "/about",    label: "Studio",   num: "04" },
-  { to: "/contact",  label: "Contact",  num: "05" },
-];
+import React from "react";
 
 export default function Footer() {
   return (
     <footer className="footer">
+      <div className="footer-cta">
+        <h2 className="footer-heading">
+          Grow with us.<br />
+          Start your journey today.
+        </h2>
+        <div className="footer-actions">
+          <a href="/contact" className="btn-get-started">
+            Get Started <span>&gt;</span>
+          </a>
+          <a href="/about" className="btn-learn-more">
+            Learn More
+          </a>
+        </div>
+      </div>
+
       <div className="footer-inner">
-        <div className="f-top">
-          <div className="f-top-left">
-            <p className="f-eyebrow">[Start something]</p>
-
-            <h2 className="f-cta-title">
-              Let&apos;s <em>collaborate.</em>
-            </h2>
-
-            <div className="f-cta-actions">
-              <a className="f-cta-btn f-cta-btn-primary" href={WHATSAPP} target="_blank" rel="noreferrer">
-                Message us on WhatsApp
-                <span aria-hidden="true">↗</span>
-              </a>
-              <a className="f-cta-btn f-cta-btn-ghost" href={`tel:${PHONE}`}>
-                {PHONE_DISPLAY}
-              </a>
-            </div>
+        <div className="footer-left">
+          <p className="footer-brand">Vanta Creative</p>
+          <a href="mailto:contact@vantacreative.com" className="footer-email">
+            contact@vantacreative.com
+          </a>
+        </div>
+        
+        <div className="footer-right">
+          <div className="footer-col">
+            <h4 className="footer-col-title">Menu</h4>
+            <nav className="footer-nav">
+              <a href="/solutions">Solutions</a>
+              <a href="/features">Features</a>
+              <a href="/ai-power">AI Power</a>
+              <a href="/pricing">Pricing</a>
+            </nav>
           </div>
-
-          <div className="f-top-right">
-            <p className="f-col-label">Navigate</p>
-            <nav className="f-nav">
-              {navLinks.map((n) => (
-                <a key={n.to} href={n.to} className="f-nav-link">
-                  <span className="f-nav-num">{n.num}</span> {n.label}
-                </a>
-              ))}
+          
+          <div className="footer-col">
+            <h4 className="footer-col-title">Socials</h4>
+            <nav className="footer-nav">
+              <a href="https://instagram.com/marketingbyvantacreative" target="_blank" rel="noreferrer">Instagram</a>
+              <a href="https://linkedin.com/company/marketingbyvantacreative" target="_blank" rel="noreferrer">LinkedIn</a>
+              <a href="https://x.com/vantacreative" target="_blank" rel="noreferrer">X</a>
             </nav>
           </div>
         </div>
-
-        {/* Compact bottom strip — address on the left, socials on the right.
-            Phone + WhatsApp are already in the CTA buttons above, so we
-            don't repeat them here. */}
-        <div className="f-bottom">
-          <span className="f-bottom-addr">Indore · Bombay · India</span>
-
-          <nav className="f-bottom-socials">
-            {socials.map((s) => (
-              <a
-                key={s.k}
-                href={s.href}
-                target="_blank"
-                rel="noreferrer"
-                className="f-bottom-social"
-                style={{ "--soc-color": s.color }}
-              >
-                {s.k}
-              </a>
-            ))}
-          </nav>
-        </div>
-
-        <p className="f-credit">
-          © 2026 Circle <span className="f-credit-dot" /> Indore · Bombay
-        </p>
       </div>
     </footer>
   );

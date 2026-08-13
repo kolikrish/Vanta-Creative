@@ -1,6 +1,6 @@
 export const testimonials = [
   {
-    quote: "Circle treats our growth like their own. The creative output is relentless and the numbers keep moving in the right direction.",
+    quote: "Vanta Creative treats our growth like their own. The creative output is relentless and the numbers keep moving in the right direction.",
     author: "Priya Bindal",
     role: "Head of Brand, Investitute"
   },

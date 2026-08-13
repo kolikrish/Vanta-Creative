@@ -1,272 +1,190 @@
-/* Compact footer — single column, accent palette pulled from globals.
-   Re-laid-out so the previously empty black band between the CTA and the
-   credit line is gone: contact info + socials share one inline strip,
-   and the credit sits directly beneath. */
+/* Footer - Black BG with CTA */
 
 .footer {
   position: relative;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
-  padding: clamp(3.5rem, 7vh, 6rem) clamp(1.5rem, 5vw, 5rem) clamp(2rem, 4vh, 3rem);
+  width: 100%;
+  padding: clamp(4rem, 10vh, 8rem) clamp(1.5rem, 5vw, 5rem) clamp(2rem, 5vh, 4rem);
+  background: #000;
+  color: #fff;
+  z-index: 10;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4rem, 12vh, 10rem);
+}
+
+.footer-cta {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.footer-heading {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0;
+  color: #fff;
+}
+
+.footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-get-started {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fff;
+  color: #000;
+  padding: 0.75rem 1.25rem 0.75rem 1.5rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.btn-get-started:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.btn-get-started span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  color: #fff;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.btn-get-started:hover span {
+  transform: translateX(3px);
+}
+
+.btn-learn-more {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.btn-learn-more:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
 }
 
 .footer-inner {
-  max-width: 1200px;
+  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
-  flex-direction: column;
-  gap: clamp(1.25rem, 2.5vh, 2.25rem);
-}
-
-.f-eyebrow {
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  letter-spacing: 0.21em;
-  color: var(--c-pink);
-  margin: 0;
-}
-
-.f-cta-title {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(2.6rem, 7vw, 6rem);
-  line-height: 1;
-  letter-spacing: -0.015em;
-  color: var(--text);
-  margin: 0;
-}
-
-.f-cta-title em {
-  font-style: italic;
-  color: var(--accent);
-  font-weight: 400;
-}
-
-/* CTA action buttons (WhatsApp + Phone) — replaces the old single email link.
-   Inline-flex so they sit side-by-side and wrap to a column on narrow widths. */
-.f-cta-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem 1rem;
-  align-items: center;
-}
-
-.f-cta-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.7rem 1.1rem;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  letter-spacing: 0.075em;
-  text-decoration: none;
-  border-radius: 999px;
-  transition: transform 0.3s ease, background 0.3s ease,
-              border-color 0.3s ease, color 0.3s ease;
-}
-
-.f-cta-btn-primary {
-  background: var(--c-yellow);
-  color: var(--bg);
-  border: 1px solid var(--c-yellow);
-}
-
-.f-cta-btn-primary:hover {
-  transform: translateY(-2px);
-  background: color-mix(in srgb, var(--c-yellow) 88%, white);
-}
-
-.f-cta-btn-ghost {
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--text-mute);
-  font-variant-numeric: tabular-nums;
-}
-
-.f-cta-btn-ghost:hover {
-  border-color: var(--c-yellow);
-  color: var(--c-yellow);
-  transform: translateY(-2px);
-}
-
-/* Top row — collab CTA on the left, Navigate list on the right. */
-.f-top {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: clamp(2rem, 6vw, 5rem);
-  align-items: end;
-}
-
-.f-top-left {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(0.85rem, 2vh, 1.5rem);
-}
-
-.f-top-right {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  min-width: 11rem;
-}
-
-@media (max-width: 700px) {
-  /* Keep the 2-column layout on mobile (don't collapse to a single
-     column) — navigation sits to the RIGHT of the "Let's collaborate"
-     CTA and WhatsApp/phone buttons. The right column is compacted so
-     both fit at narrow widths. */
-  .f-top {
-    grid-template-columns: 1fr auto;
-    gap: 1rem;
-    align-items: start;
-  }
-  .f-top-right { min-width: 0; }
-  .f-nav { align-items: flex-end; }
-  .f-nav-link {
-    font-size: 1.15rem;
-    gap: 0.4rem;
-    width: auto;
-  }
-  .f-col-label { text-align: right; margin-bottom: 0.4rem; }
-
-  /* The 2-column footer layout leaves less room for the WhatsApp /
-     phone CTA buttons — shrink them so they don't dominate the
-     left column. */
-  .f-cta-actions { gap: 0.5rem; }
-  .f-cta-btn {
-    padding: 0.5rem 0.85rem;
-    font-size: 1.1rem;
-    gap: 0.4rem;
-  }
-}
-
-.f-col-label {
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  letter-spacing: 0.21em;
-  color: var(--c-pink);
-  margin: 0 0 0.6rem;
-}
-
-.f-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.f-nav-link {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.65rem;
-  font-family: var(--font-display);
-  font-size: clamp(1rem, 1.4vw, 1.3rem);
-  font-weight: 500;
-  letter-spacing: 0em;
-  color: var(--text);
-  text-decoration: none;
-  text-transform: none;
-  width: max-content;
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-.f-nav-link:hover { color: var(--accent); transform: translateX(4px); }
-
-.f-nav-num {
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.13em;
-  color: var(--text-mute);
-}
-
-/* === Compact bottom strip — contact + socials in one row === */
-
-.f-bottom {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: flex-end;
   flex-wrap: wrap;
-  gap: 0.75rem 2rem;
-  margin-top: clamp(1rem, 2.5vh, 1.75rem);
-  padding-top: clamp(1rem, 2.5vh, 1.5rem);
-  border-top: 1px solid var(--border);
+  gap: 3rem;
 }
 
-.f-bottom-contact {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.footer-left {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem 1.6rem;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.f-bottom-contact li {
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-weight: 500;
+  margin: 0;
+  color: #fff;
+}
+
+.footer-email {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-email:hover {
+  color: #fff;
+}
+
+.footer-right {
+  display: flex;
+  gap: clamp(3rem, 8vw, 6rem);
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.footer-col-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+  color: #fff;
+}
+
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.footer-nav a {
   font-family: var(--font-body);
   font-size: 0.95rem;
-  color: var(--text);
-  line-height: 1.4;
-}
-
-.f-bottom-contact a {
-  color: var(--text);
+  color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  transition: color 0.25s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
-.f-bottom-contact a:hover { color: var(--c-yellow); }
-
-.f-bottom-addr {
-  color: var(--text-mute);
-  letter-spacing: 0.08em;
-  font-size: 0.78rem;
+.footer-nav a:hover {
+  color: #fff;
+  transform: translateX(4px);
 }
 
-.f-bottom-socials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.1rem;
-}
-
-.f-bottom-social {
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  letter-spacing: 0.07em;
-  color: var(--text-dim);
-  text-decoration: none;
-  transition: color 0.25s ease;
-}
-
-.f-bottom-social:hover { color: var(--soc-color, var(--accent)); }
-
-/* === Credit === */
-
-.f-credit {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  color: var(--text-mute);
-  text-transform: none;
-  margin: 0;
-}
-
-.f-credit-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-@media (max-width: 600px) {
-  .footer { padding: 3rem 1.25rem 2rem; }
-  .f-bottom { flex-direction: column; align-items: flex-start; gap: 0.85rem; }
-  .f-bottom-contact { gap: 0.35rem 1.1rem; }
-  .f-bottom-socials { gap: 0.9rem; }
-  .f-cta-actions { gap: 0.45rem; }
-  .f-cta-btn { padding: 0.45rem 0.8rem; font-size: 0.78rem; gap: 0.4rem; }
+@media (max-width: 768px) {
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3rem;
+  }
+  
+  .footer-right {
+    width: 100%;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  
+  .footer-heading {
+    font-size: clamp(2.5rem, 9vw, 4rem);
+  }
 }

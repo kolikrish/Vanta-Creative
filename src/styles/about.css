@@ -666,14 +666,14 @@
   .about-panel-quote { flex-basis: 100vw; }
   .about-quote-stack { top: 14vh; left: 6vw; max-width: 92vw; }
   /* Bumped the rainbow quote lines on mobile — was 18vw, now 22vw
-     with a higher cap so "Expand Your Radius with Circle" feels
+     with a higher cap so "Expand Your Radius with Vanta Creative" feels
      properly hero-scale on a phone. */
   .quote-line { font-size: clamp(3.6rem, 22vw, 8rem); }
   /* Pushed the rotating caption further DOWN on the last horizontal
      slide — `bottom: 30vh` was sitting too close to the heading and
      felt crowded; `bottom: 10vh` parks it near the bottom of the
      slide so the rotating phrase has room to breathe under "Expand
-     Your Radius with Circle". */
+     Your Radius with Vanta Creative". */
   .quote-sub-wrap { bottom: 10vh; right: 6vw; left: auto; }
   /* Bumped from 1.5rem → 1.75rem so the caption holds its weight
      under the now-bigger rainbow heading on mobile. */

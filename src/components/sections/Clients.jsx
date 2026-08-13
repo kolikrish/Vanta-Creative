@@ -187,7 +187,7 @@ export default function Clients({ brands, heading, eyebrow, cta }) {
       <div className="brands-stage">
         <div className="brands-head">
           <p>{eyebrow || "[Brands we've worked with, 40+]"}</p>
-          {cta ? cta : <p>{heading || "Circle ↻ 2018–2026"}</p>}
+          {cta ? cta : <p>{heading || "Vanta Creative ↻ 2018–2026"}</p>}
         </div>
 
         <div className="brands-edge brands-edge-top" aria-hidden="true" />

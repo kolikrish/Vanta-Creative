@@ -1,24 +1,10 @@
-/* "Global Reach" — sits below the brands marquee. Two-column layout: copy +
-   country pills + stat on the left, stylized globe with location pins on
-   the right. Matches the rest of the site (var(--bg), --text, --accent). */
-
 .reach {
   position: relative;
   width: 100%;
-  /* Bottom padding removed entirely so the section ends right at
-     the bottom of the grid (globe + pills row) and the Footer that
-     follows sits flush against it. */
   padding: 0 1.5rem 0;
-  margin-top: -2rem;
-  /* Pull the footer up so the gap between this section and the
-     Footer collapses to nothing. */
   margin-bottom: -3rem;
   background: var(--bg);
   color: var(--text);
-  /* No overflow clip on the section so the globe canvas can extend past
-     the section's top edge and visually overlay the previous section.
-     The arcs sit much higher above the planet now and would otherwise
-     be cropped by the section bounds. */
   overflow: visible;
   border-bottom: 1px solid var(--border);
   z-index: 1;
@@ -57,18 +43,10 @@
 
 .reach-accent {
   color: var(--accent);
-  /* Force the accent phrase onto its own line below the main copy
-     across every breakpoint — "Domestic and international clients,"
-     stays on top, "working in 4+ countries." sits below it. The
-     phrase still wraps internally if a single line is wider than
-     the container, but the line break before it is guaranteed. */
   display: block;
   white-space: nowrap;
 }
 
-/* If the accent phrase is forced onto one line via `nowrap` but
-   the container is too narrow to fit it (≤480px or heavy zoom),
-   allow internal wrapping so it doesn't overflow horizontally. */
 @media (max-width: 480px) {
   .reach-accent { white-space: normal; }
 }
@@ -88,10 +66,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(2rem, 5vw, 5rem);
-  /* Was `align-items: center` — the right column (the globe) is
-     taller-than-square, so centring vertically left a huge dead band
-     above the country pills. Top-align so pills sit right under the
-     headline copy on desktop. */
   align-items: start;
 }
 
@@ -101,8 +75,6 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  /* Small top margin keeps the pills slightly below the heading
-     baseline without sitting flush against it. */
   margin-top: 0.5rem;
 }
 
@@ -124,10 +96,6 @@
   border: 1px solid var(--border);
   border-radius: 14px;
   transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-  /* Lock every pill to the same intrinsic height regardless of which
-     flag emoji it carries — `🇨🇦` and `🇺🇸` have slightly different
-     drawn heights on some platforms, which used to push Canada's
-     text down relative to its row neighbours. */
   min-height: 3rem;
 }
 
@@ -230,17 +198,11 @@
   align-items: center;
   justify-content: center;
   align-self: start;
-  /* Globe lifted up to overlap the previous section — same visual
-     position as the original design. The bottom dead band that the
-     lift used to create is killed by .reach's `margin-bottom: -3rem`
-     above, which pulls the Footer up flush against the section. */
   margin-top: -16rem;
   z-index: 5;
   pointer-events: none;
 }
 
-/* WebGL canvas mount — taller-than-square so the lifted arcs at the
-   top of the scene aren't cropped at the canvas edge. */
 .reach-globe-3d {
   position: relative;
   width: 100%;
@@ -261,13 +223,7 @@
 
 /* === Responsive === */
 
-/* === Responsive — mirror the desktop two-column layout, just shrunk so it
-   reads cleanly on phones. Keeps text on the left, globe on the right, and
-   the 2-column pill grid intact, instead of the previous mobile-stacked
-   variant. === */
-
 @media (max-width: 900px) {
-  /* Brands has no sticky stage / no empty runway on mobile, so
      just a tiny overlap to remove the seam between sections. */
   .reach { padding: 0 1.25rem 3rem; margin-top: -1rem; }
   .reach-inner { padding-left: clamp(0.5rem, 2vw, 1.25rem); }
@@ -285,10 +241,6 @@
   .reach-left { gap: 1.5rem; }
 
   .reach-pills {
-    /* Stack the 4 country pills vertically on mobile so each one
-       has the full row width — Canada was wrapping ("Canad / a") at
-       the 2-column width. Single column also makes the pills feel
-       like proper buttons rather than tiny tags. */
     grid-template-columns: 1fr;
     gap: 0.55rem;
   }

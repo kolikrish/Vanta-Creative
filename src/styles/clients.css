@@ -321,7 +321,7 @@
 }
 
 /* Inline CTA inside the brands-head row — replaces the right-hand
-   "Circle ↻ 2018–2026" caption on the home honeycomb so the "see all
+   "Vanta Creative ↻ 2018–2026" caption on the home honeycomb so the "see all
    brands" link sits up at the top of the section instead of in its
    own block below. */
 .brands-head-cta {
@@ -515,18 +515,7 @@
   gap: clamp(1rem, 2vw, 2rem);
 }
 
-/* The 4-orb rows are centred between the 5-orb rows because flex justify-
-   content already does that — no manual margin offset needed when the row
-   counts differ by 1. The visual is the watchOS staggered grid: a 5 above
-   a 4 above a 5, every line dead-centred to the section. */
-
-/* === Brand orb === */
-
 .brand-orb {
-  /* Larger orb than before — combined with the smaller inner
-     padding and the white-halo knockout via mix-blend-mode, the
-     brand mark reads substantially bigger inside its coloured
-     plate now. */
   --orb-size: clamp(110px, 12vw, 180px);
   --orb-scale: 0.85;
   --orb-op: 0.65;
@@ -538,10 +527,6 @@
   cursor: pointer;
   transform: scale(var(--orb-scale));
   opacity: var(--orb-op);
-  /* The scroll-driven scale is rewritten every animation frame, so adding
-     a real CSS transition here would fight the rAF loop. The 0.05s curve
-     just smooths the per-frame writes. Hover transition lives on the inner
-     element, where the rAF loop never touches transform. */
   transition: transform 0.05s linear, opacity 0.18s linear;
   will-change: transform, opacity;
 }
@@ -558,10 +543,6 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  /* Inner padding controls how much of the orb the brand mark
-     fills. Bumped from 4% → 14% to make the logos themselves read
-     a touch smaller inside each orb (more breathing room around
-     the mark, orb circle size unchanged). */
   padding: 14%;
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--orb-color) 35%, transparent),
@@ -610,10 +591,6 @@
   .brand-orb--boost .brand-orb-inner { padding: 3%; }
 }
 
-/* Hover scales the inner only, so the rAF-driven outer scale is untouched.
-   Bumped to 1.32 for a more pronounced watchOS-style focus pop. The colour
-   of the orb saturates and a glowing ring appears in the orb's brand
-   colour. */
 .brand-orb:hover .brand-orb-inner {
   transform: scale(1.32);
   background:

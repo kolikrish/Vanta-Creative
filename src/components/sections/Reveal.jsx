@@ -254,10 +254,10 @@ export default function Reveal() {
       <section className="reveal-hero">
         <div className="reveal-header-wrapper">
           <div className="reveal-header reveal-header-1">
-            <h1>Circle</h1>
+            <h1>Vanta</h1>
           </div>
           <div className="reveal-header reveal-header-2">
-            <h1>Media</h1>
+            <h1>Creative</h1>
           </div>
         </div>
         <div className="reveal-hero-footer">
@@ -321,7 +321,7 @@ export default function Reveal() {
           <div className="reveal-about" ref={aboutRef}>
             <article className="about-panel about-panel-intro">
               <h2 className="about-title about-title-splash" data-float data-drift="50" data-spin="1.5">
-                Circle is a digital<br />
+                Vanta Creative is a digital<br />
                 marketing agency.
               </h2>
 
@@ -403,10 +403,10 @@ export default function Reveal() {
               className="about-panel about-panel-quote"
               ref={quoteRef}
             >
-              <h2 className="about-quote-stack" aria-label="Expand your radius with Circle.">
+              <h2 className="about-quote-stack" aria-label="Expand your radius with Vanta Creative.">
                 <span className="quote-line-wrap"><span className="quote-line">Expand Your</span></span>
                 <span className="quote-line-wrap"><span className="quote-line">Radius</span></span>
-                <span className="quote-line-wrap"><span className="quote-line">with Circle.</span></span>
+                <span className="quote-line-wrap"><span className="quote-line">with Vanta Creative.</span></span>
               </h2>
               <div className="quote-sub-wrap" aria-live="polite">
                 <p className="about-quote-sub" key={cycleIdx}>

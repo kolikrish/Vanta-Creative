@@ -1,10 +1,5 @@
 import GlobeWebGL from "../fx/GlobeWebGL.jsx";
 
-/* Global Reach — sits below the Brands marquee. Highlights that Circle works
-   with both domestic and international clients across quick-commerce, with a
-   real WebGL globe (auto-rotating, drag-interactive) on the right and copy
-   on the left. */
-
 const REGIONS = [
   { flag: "🇮🇳", name: "India"  },
   { flag: "🇦🇪", name: "Dubai"  },

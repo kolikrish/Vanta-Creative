@@ -78,7 +78,7 @@
 }
 
 /* The mark sits at ~70% of the holder so it doesn't dominate the
-   "Circle is a digital marketing agency." copy that slides in next
+   "Vanta Creative is a digital marketing agency." copy that slides in next
    to it during the pinned animation. */
 .reveal-img img {
   width: 70%;
@@ -105,10 +105,7 @@
   .reveal-hero-footer .mn { font-size: 0.7rem; letter-spacing: 0.07em; }
 }
 
-/* "Keep scrolling" hint — appears at the bottom of the pinned holder
-   section so users realise they need to keep scrolling vertically for
-   the horizontal stats/about animation to play. The pin timeline
-   fades opacity to 0 the moment scroll begins (see Reveal.jsx). */
+
 .reveal-scroll-hint {
   position: absolute;
   left: 50%;
@@ -128,9 +125,6 @@
   animation: reveal-hint-bob 1.6s ease-in-out infinite;
 }
 
-/* The label is a child <span>; globals.css sets `span { font-size: 0.9rem }`
-   which overrides the parent's font-size. Force the label to use its
-   parent's size with explicit pixel values + !important. */
 .reveal-scroll-hint-label {
   font-size: 8px !important;
   letter-spacing: inherit !important;

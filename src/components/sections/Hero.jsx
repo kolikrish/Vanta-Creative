@@ -5,7 +5,7 @@ import { getLenis as getTrueLenis } from "../../App.jsx";
 
 // Rotating service categories shown after "We're your growth partner for".
 // Cycles fast (~1.1s per item) so the list reads as a quick catalogue of
-// what Circle covers, not a slow rotating slogan.
+// what Vanta Creative covers, not a slow rotating slogan.
 const HERO_SERVICES = [
   "Social Media",
   "Ecommerce",
@@ -142,7 +142,7 @@ export default function Hero() {
         data-hero-reveal
         aria-hidden="true"
       >
-        <span>Circle, Est. 2019</span>
+        <span>Vanta Creative, Est. 2019</span>
       </p>
 
       <div className="hero-split-particles" aria-hidden="true">
@@ -164,12 +164,12 @@ export default function Hero() {
 
       <div className="hero-split-content" ref={copyRef}>
         <p className="hero-split-eyebrow" data-hero-reveal>
-          <span>Circle, Est. 2019</span>
+          <span>Vanta Creative, Est. 2019</span>
         </p>
 
         <h1 className="hero-split-title" data-hero-reveal>
           <span className="hero-split-prelude">
-            <span className="hero-split-prelude-line">Circle Media,</span>
+            <span className="hero-split-prelude-line">Vanta Creative,</span>
             <span className="hero-split-prelude-line">Your Growth Partner for</span>
           </span>
           <span className="hero-split-accent">

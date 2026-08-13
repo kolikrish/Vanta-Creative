@@ -151,8 +151,8 @@ export default function TopNav() {
     <header className="topnav" ref={headerRef}>
       <div className="topnav-inner" ref={innerRef}>
         <a href="/" className="tn-item topnav-logo">
-          <img src="/newlogo.png" alt="Circle" className="tn-logo-img" />
-          <span className="tn-logo-word">Circle</span>
+          <img src="/newlogo.png" alt="Vanta Creative" className="tn-logo-img" />
+          <span className="tn-logo-word">Vanta Creative</span>
         </a>
         <nav className="tn-item topnav-links">
           {navLinks.map((n) => (

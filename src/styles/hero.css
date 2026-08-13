@@ -1,15 +1,3 @@
-/* Hide the hero entrance items at first paint so they don't flash visible
-   before the GSAP useEffect fires its initial gsap.set(opacity:0). Without
-   this rule, the page renders the items at full opacity for one frame,
-   then JS hides them, then animates them in — that single-frame flash is
-   what reads as a "glitchy" load.
-
-   IMPORTANT failsafe: if GSAP fails to fire the entrance timeline (slow
-   mobile reload, hydration race, paused tab) the content was previously
-   stuck at opacity 0 forever and the user had to reload. The CSS keyframe
-   below guarantees the items become visible after 1.2s regardless of the
-   JS state — GSAP overrides this animation when it runs (gsap.set is more
-   specific) so the normal entrance still wins on healthy loads. */
 [data-hero-reveal] {
   opacity: 0;
   will-change: transform, opacity, filter;
@@ -27,9 +15,7 @@
   }
 }
 
-/* Split hero: particle-forming logo on the left, tagline on the right.
-   Fills the viewport; the next section (Process) scrolls up over a solid
-   background, so no pin logic is needed here. */
+
 .hero-split {
   position: relative;
   width: 100vw;
@@ -139,13 +125,6 @@
 .hero-split-title {
   font-family: var(--font-display);
   font-weight: 400;
-  /* Tighter font-size curve than before. The previous `5.2vw` middle
-     value produced ~71px on a 1366-px Windows laptop, which forced the
-     lead text "A digital marketing agency specializing in" to wrap to
-     3 lines and shifted the entire page layout up/down on different
-     screens. The 3.4vw middle keeps the lead at exactly 2 lines from
-     ~1000px up, and the 4.6rem cap stops it growing too large on big
-     monitors. */
   font-size: clamp(2.4rem, 3.4vw, 4.6rem);
   line-height: 1.05;
   letter-spacing: -0.01em;
@@ -153,10 +132,6 @@
   text-wrap: balance;
 }
 
-/* Prelude — the intro line above the rotating accent. Renders at the same
-   display size as the accent itself ("We're your growth partner for") in
-   white, so the headline reads as a single big sentence with the rotator
-   completing it underneath. */
 .hero-split-prelude {
   display: block;
   font-size: inherit;
@@ -170,9 +145,6 @@
   margin-bottom: 0.1em;
 }
 
-/* Force "Circle Media," and "Your Growth Partner for" onto their own
-   lines regardless of available width, instead of letting the browser
-   wrap them as a single sentence. */
 .hero-split-prelude-line {
   display: block;
   font-size: inherit;
@@ -184,10 +156,6 @@
   text-transform: none;
 }
 
-/* Desktop only — bump the FIRST prelude line ("Circle Media,") so
-   the brand name reads larger than the supporting "Your Growth
-   Partner for" line below it. Mobile keeps the inherited size so
-   both lines stay in lockstep on phones. */
 @media (min-width: 1001px) {
   .hero-split-prelude-line:first-child {
     font-size: clamp(3.8rem, 5.4vw, 7rem);
@@ -213,24 +181,17 @@
   color: var(--accent);
   font-style: normal;
   letter-spacing: -0.015em;
-  /* Override globals.css `span { font-size: 0.9rem; ... }` so the accent
-     word inherits the parent <h1>'s display sizing instead of shrinking. */
   font-size: inherit;
   font-family: inherit;
   line-height: inherit;
   text-transform: none;
   text-wrap: balance;
-  /* Reserve enough vertical room for the longest phrase (which wraps to
-     two lines on desktop) so the layout below doesn't bounce when the
-     text swaps between short and long entries. */
   min-height: calc(1.05em * 2);
   margin-top: 0.15em;
 }
 
 .hero-split-accent-text {
   display: inline-block;
-  /* Inherit so we don't fall back into the global `span` 0.9rem +
-     uppercase rule — without this the cycling phrase renders in caps. */
   font-size: inherit;
   font-family: inherit;
   font-style: inherit;
@@ -303,14 +264,6 @@
 }
 
 @media (max-width: 1000px) {
-  /* Mobile hero: clean vertical stack — eyebrow, logo, content —
-     with NO negative margins, NO viewport-height locks, and explicit
-     left-alignment everywhere. Devices like iPhone 13, Pixel and
-     Galaxy were rendering the old layout with the title + sub
-     clumped into the bottom-centre because negative margins pulled
-     the content column up into the particle canvas. The new layout
-     just stacks each block with normal flow and a consistent gap,
-     so it can't overlap on any viewport. */
   .hero-split {
     grid-template-columns: 1fr;
     min-height: 0;
@@ -320,9 +273,6 @@
   }
   .hero-split-eyebrow-mobile {
     display: inline-flex;
-    /* Top margin must clear the fixed top nav (height 58px + top
-       offset 1rem = ~74px). Smaller margins were letting the
-       eyebrow render behind the floating nav bar on mobile. */
     margin: clamp(5.5rem, 12vh, 7.5rem) 0 0;
     padding: 0 clamp(1rem, 4vw, 1.5rem);
     width: 100%;
@@ -333,24 +283,13 @@
     display: none;
   }
   .hero-split-particles {
-    /* Fixed height that always leaves room for the content below.
-       No negative margins — the canvas is contained inside its own
-       row so it can never crash into the title block. */
     height: 44vh;
     height: 44svh;
     min-height: 280px;
     max-height: 460px;
     margin-top: clamp(0.5rem, 2vh, 1.25rem);
-    /* Mobile: transparent container so the logo / WebGL particles
-       sit as a free-floating overlay on the section background
-       rather than appearing inside a visible "square" box while the
-       canvas is still painting its first frame. */
     background: transparent;
   }
-  /* Drop the edge-fade gradient on mobile — it was making the box
-     edges of the particle canvas visible during load. The logo and
-     particles should look like they're floating on the section
-     background, no rectangular frame. */
   .hero-split-particles::after { display: none; }
   .hero-split-content {
     padding: clamp(1.25rem, 3.5vh, 2.5rem) clamp(1rem, 4vw, 1.5rem) 0;
@@ -359,10 +298,6 @@
     gap: clamp(0.8rem, 2vh, 1.4rem);
     text-align: left;
     align-items: flex-start;
-    /* Override the desktop `justify-content: center` so content
-       starts at the top of its row instead of being vertically
-       centred — that was clumping the title + sub + scroll into
-       the middle of the row on phones with shorter content. */
     justify-content: flex-start;
   }
   .hero-split-title {
@@ -371,10 +306,7 @@
     text-wrap: pretty;
     width: 100%;
   }
-  /* Mobile: emphasise "Circle Media," over the supporting line and
-     the rotating accent. The brand goes bigger; the prelude tagline
-     stays mid-sized on one row; the accent (orange rotating service)
-     drops below the title size so the eye lands on the brand. */
+
   .hero-split-prelude-line:first-child {
     font-size: clamp(3.7rem, 16vw, 5.6rem);
     line-height: 1;
@@ -382,11 +314,7 @@
     text-align: left;
     margin-bottom: 0;
   }
-  /* "Your Growth Partner for" — restored on mobile. The horizontal-
-     overflow protection now lives at the body level (`overflow-x:
-     hidden` in globals.css), so this line can render without
-     dragging the page off-screen even if it's longer than the
-     viewport. Normal wrapping so it can break naturally if needed. */
+
   .hero-split-prelude-line:last-child {
     display: block;
     font-size: clamp(1.85rem, 7.6vw, 2.8rem);
