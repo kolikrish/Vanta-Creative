@@ -345,7 +345,7 @@ export default function Reveal() {
                 data-spin="2"
               >
                 <div className="process-float-img">
-                  <WavyImage src="/assets/process/research.png" alt="Research" />
+                  <WavyImage src="/assets/research.png" alt="Research" />
                 </div>
                 <figcaption>
                   <h3>Research and Planning</h3>
@@ -360,7 +360,7 @@ export default function Reveal() {
                 data-spin="-3"
               >
                 <div className="process-float-img">
-                  <WavyImage src="/assets/process/digital.png" alt="Digital" />
+                  <WavyImage src="/assets/digital.png" alt="Digital" />
                 </div>
                 <figcaption>
                   <h3>Implement Digital Solutions</h3>
@@ -375,7 +375,7 @@ export default function Reveal() {
                 data-spin="-2"
               >
                 <div className="process-float-img">
-                  <WavyImage src="/assets/process/analyze.png" alt="Analyze" />
+                  <WavyImage src="/assets/analyze.png" alt="Analyze" />
                 </div>
                 <figcaption>
                   <h3>Analysis and Optimization</h3>
@@ -390,7 +390,7 @@ export default function Reveal() {
                 data-spin="3"
               >
                 <div className="process-float-img">
-                  <WavyImage src="/assets/process/evolve.png" alt="Evolve" />
+                  <WavyImage src="/assets/evolve.png" alt="Evolve" />
                 </div>
                 <figcaption>
                   <h3>Adapt and Evolve</h3>

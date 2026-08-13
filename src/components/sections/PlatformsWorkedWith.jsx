@@ -10,16 +10,8 @@ const PLATFORMS = [
   {
     id: "amazon",
     name: "Amazon Ads",
-    /* `logo` is the clean wordmark used on the home-page card (small,
-       neutral, fits the card grid). `modalLogo` is the full
-       "Verified Partner" badge — the real Amazon-issued artwork —
-       shown inside the modal where there's enough room for it to read
-       at full size. */
-    /* User-supplied partner badge dropped at
-       public/assets/socials/amazon-partner.png (from ~/Desktop/logos/).
-       Used both on the home card and inside the modal. */
-    logo: "/assets/socials/amazon-partner.png",
-    modalLogo: "/assets/socials/amazon-partner.png",
+    logo: "/assets/amazon-partner.png",
+    modalLogo: "/assets/amazon-partner.png",
     role: "Verified Advertising Partner",
     blurb: "Sponsored Products, Brands and DSP, tuned for ROAS.",
     accent: "var(--c-yellow)",
@@ -47,11 +39,8 @@ const PLATFORMS = [
   {
     id: "meta",
     name: "Meta Business Partner",
-    /* User-supplied partner badge dropped at
-       public/assets/socials/meta-partner.png (from ~/Desktop/logos/).
-       Used both on the home card and inside the modal. */
-    logo: "/assets/socials/meta-partner.png",
-    modalLogo: "/assets/socials/meta-partner.png",
+    logo: "/assets/meta-partner.png",
+    modalLogo: "/assets/meta-partner.png",
     role: "Verified Creative Agency",
     blurb: "Facebook, Instagram and Reels, full-funnel creative + media.",
     accent: "var(--c-blue)",

@@ -9,10 +9,10 @@ gsap.registerPlugin(ScrollTrigger);
    Meta are removed. All tiles are rendered with a rounded card shape
    and a soft black overlay so they read as themed accents. */
 const PARALLAX_IMAGES = [
-  { src: "/assets/socials/amazon.png",    cls: "tagline-img tagline-img-1", speed: -90 },
-  { src: "/assets/socials/ig.png",        cls: "tagline-img tagline-img-2", speed: 70 },
-  { src: "/assets/socials/blinkit.png",   cls: "tagline-img tagline-img-3", speed: -130 },
-  { src: "/assets/socials/facebook.jpeg", cls: "tagline-img tagline-img-8", speed: 60 },
+  { src: "/assets/amazon.png",    cls: "tagline-img tagline-img-1", speed: -90 },
+  { src: "/assets/ig.png",        cls: "tagline-img tagline-img-2", speed: 70 },
+  { src: "/assets/blinkit.png",   cls: "tagline-img tagline-img-3", speed: -130 },
+  { src: "/assets/facebook.jpeg", cls: "tagline-img tagline-img-8", speed: 60 },
 ];
 
 export default function Tagline() {
