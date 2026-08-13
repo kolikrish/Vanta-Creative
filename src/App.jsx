@@ -46,12 +46,6 @@ import PageLoader from "./components/PageLoader.jsx";
 import CursorFX from "./components/fx/CursorFX.jsx";
 
 import Home from "./pages/Home.jsx";
-import ServicesPage from "./pages/ServicesPage.jsx";
-import WorkPage from "./pages/WorkPage.jsx";
-import WorkDetailPage from "./pages/WorkDetailPage.jsx";
-import AboutPage from "./pages/AboutPage.jsx";
-import ContactPage from "./pages/ContactPage.jsx";
-import BrandsPage from "./pages/BrandsPage.jsx";
 
 let lenisInstance = null;
 export const getLenis = () => lenisInstance;
@@ -224,12 +218,6 @@ export default function App() {
         <TopNav />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/work" element={<WorkPage />} />
-          <Route path="/work/:slug" element={<WorkDetailPage />} />
-          <Route path="/brands" element={<BrandsPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
         </Routes>
       </div>
     </>
