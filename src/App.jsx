@@ -15,7 +15,7 @@ if (
 
 if (typeof window !== "undefined") {
   const dm = navigator.deviceMemory ?? 8;       
-  const hc = navigator.hardwareConcurrency ?? 8; 
+  const hc = navigator.hardwareConcurrency ?? 8;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isLowPerf = reduceMotion || dm < 4 || hc < 4;
   document.documentElement.classList.toggle("is-low-perf", isLowPerf);
@@ -26,7 +26,6 @@ import TopNav from "./components/TopNav.jsx";
 import Transition from "./components/Transition.jsx";
 import PageLoader from "./components/PageLoader.jsx";
 import CursorFX from "./components/fx/CursorFX.jsx";
-
 import Home from "./pages/Home.jsx";
 
 let lenisInstance = null;
@@ -36,9 +35,7 @@ export default function App() {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    const isTouch =
-      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
-      window.innerWidth <= 900;
+    const isTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches || window.innerWidth <= 900;
     if (!isTouch) return;
     document.documentElement.classList.remove("lenis", "lenis-smooth", "lenis-stopped");
     document.body.style.overflow = "";
