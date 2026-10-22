@@ -9,9 +9,6 @@ export default function Transition() {
   useEffect(() => {
     if (!ref.current) return;
     const blocks = ref.current.querySelectorAll(".block");
-
-    // Kill any in-flight timeline so a fast click can't strand the blocks
-    // mid-cover (which would leave a white overlay over the new page).
     if (tlRef.current) {
       tlRef.current.kill();
       tlRef.current = null;
@@ -19,16 +16,8 @@ export default function Transition() {
 
     if (first.current) {
       first.current = false;
-      // Skip the first-load block-reveal on the home route — the hero has
-      // its own entrance animation, and overlaying the page-cover blocks
-      // on top of it makes the home reload feel doubled-up. Page-to-page
-      // transitions (the timeline below) still run normally on every
-      // route, including / .
       gsap.set(blocks, { scaleY: 0 });
       return;
-      // Initial page-load reveal: longer duration + softer ease so the
-      // blocks lift away gradually instead of snapping. The smaller
-      // stagger keeps the rows feeling unified rather than zip-like.
       gsap.set(blocks, { scaleY: 1, transformOrigin: "top" });
       gsap.to(blocks, {
         scaleY: 0,

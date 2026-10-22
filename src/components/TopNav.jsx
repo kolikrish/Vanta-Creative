@@ -50,10 +50,6 @@ export default function TopNav() {
     const links = inner.querySelector(".topnav-links");
     const cta = inner.querySelector(".topnav-cta");
 
-    // Entry animation only on the home (index) route. On other pages, the nav
-    // appears in its final state immediately — clicking a nav link does a full
-    // reload (anchor tags), so without this gate the header would re-animate
-    // on every page.
     if (pathname !== "/") {
       inner.classList.remove("is-compact");
       gsap.set(el, { opacity: 1 });
@@ -61,18 +57,16 @@ export default function TopNav() {
       return;
     }
 
-    // Match the CSS breakpoints so the animation lands at the same dimensions
-    // CSS would render — otherwise clearProps causes a visible jump.
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const isXSmall = vw <= 480;
     const isMobile = vw <= 900;
 
     const targetW = isMobile
-      ? vw - (isXSmall ? 16 : 24)         // calc(100vw - 1rem | 1.5rem)
+      ? vw - (isXSmall ? 16 : 24)
       : Math.min(vw - 32, 1200);
     const targetH = isXSmall ? 46 : isMobile ? 52 : 58;
-    const targetTop = isXSmall ? 5.6 : 16; // 0.35rem | 1rem
+    const targetTop = isXSmall ? 5.6 : 16;
     const targetLeft = (vw - targetW) / 2;
 
     const startW = isMobile ? Math.min(160, targetW) : 200;
