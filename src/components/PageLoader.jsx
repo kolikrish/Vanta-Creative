@@ -39,8 +39,6 @@ export default function PageLoader() {
           });
 
     Promise.all([...imagePromises, docReady]).then(finish);
-
-    // Safety net — never let the loader stick longer than 2.2s.
     timeoutId = setTimeout(finish, 2200);
 
     return () => {

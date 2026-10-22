@@ -98,10 +98,6 @@ export default function App() {
     lenis.on("scroll", ({ scroll }) => handleY(scroll));
     const tick = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
-    // Re-enable lag smoothing (was 0 = disabled). GSAP detects when frames
-    // are dropped (e.g. tab backgrounded, slow GPU stalls) and re-syncs the
-    // animation timeline so dropped frames don't accumulate into jumpy,
-    // jittery scrub. Default thresholds.
     gsap.ticker.lagSmoothing(500, 33);
     return () => {
       gsap.ticker.remove(tick);
@@ -111,9 +107,6 @@ export default function App() {
     };
   }, []);
 
-  // Reset scroll BEFORE paint and before children mount their effects.
-  // useLayoutEffect runs synchronously after DOM commit, so the new page's
-  // BlurInText/Dissolve effects see scroll=0 when measuring rects.
   useLayoutEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -143,9 +136,6 @@ export default function App() {
     const t = setTimeout(() => {
       if (lenisInstance) lenisInstance.resize();
       ScrollTrigger.refresh();
-      // Also force a layout read so any sub-pixel scroll snapping
-      // applied by ScrollTrigger.normalizeScroll commits before the
-      // user's first interaction.
       void document.body.offsetHeight;
     }, 60);
     return () => {
